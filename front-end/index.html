@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="./public/webmanifest.json" />
+  <link rel="icon" href="./public/favicon.ico" type="image/x-icon">
+  <!-- Google Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Merriweather:400,700&display=swap"
+    rel="stylesheet">
+  <script defer src="./src/index.js" type="module"></script>
+  <link rel="stylesheet" href="./src/styles/styles.css">
+  </link>
+  <title>Incense Voice</title>
+</head>
+
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <!-- Navbar -->
+  <div class="top-nav">
+    <div class="navbar">
+      <a href="#" class="nav-item"><span class="material-symbols-outlined">home</span>Incense Voice</a>
+      <a href="#" class="nav-item"><span class="material-symbols-outlined search-icon">search</span><input
+          id="nav-search" type="text" placeholder="Search incense voice"></a>
+      <a href="#" class="nav-item"><span class="material-symbols-outlined">favorite</span>Favorites</a>
+      <a href="#" class="nav-item"><span class="material-symbols-outlined">face_6</span>My Account</a>
+    </div>
+    <!-- End Navbar -->
+  </div>
+  <header class="header">
+    <div class="header-image"></div>
+    <div class="header-block">
+      <span class="material-symbols-outlined header-icon">self_improvement</span>
+      <div class="title-block">
+        <h1 class="forum-title">Incense Voice</h1>
+        <p class="subtitle">Your source for all incense crap!</p>
+      </div>
+      <button class="join-button">Join</button>
+    </div>
+    <h2 class="forum-subtitle">Posts</h2>
+  </header>
+  <!-- Container -->
+  <div class="container">
+    <!-- New Post Card -->
+    <div class="card new-post-card">
+      <a href="#" class="current-user-icon"><span class="material-symbols-outlined user-icon">face_6</span></a>
+      <input class="new-post-input" type="text" placeholder="Create post">
+      <!-- End New Post Card -->
+    </div>
+    <!-- Sort Card -->
+    <div class="card sort-card">
+      <p>Sort icons and stuff here</p>
+      <!-- End Sort Card -->
+    </div>
+    <!-- Posts -->
+    <div id="posts">
+      <ul id="post-list">
+        <li class="card post">
+          <div class="vote-bar">
+            <a href=# class="vote-button"><span class="material-symbols-outlined vote-arrow">arrow_drop_up</span></a>
+            <p class="vote-count">123</p>
+            <a href=# class="vote-button"><span class="material-symbols-outlined vote-arrow">arrow_drop_down</span></a>
+          </div>
+          <div class="post-content">
+            <div class="author-bar post-bar">
+              <a href="#" class="post-author"><span
+                  class="material-symbols-outlined author-icon">face_6</span>Username</a>
+            </div>
+            <div class="title-bar post-bar">
+              <a href="#" class="post-title">This is a link to some cool content</a>
+            </div>
+            <div class="bottom-bar post-bar">
+              <a href="#" class="post-bottom-link">This is a link to some cool content</a>
+            </div>
+          </div>
+        </li>
+
+        <li class="card post">
+          <div class="vote-bar">
+            <a href=# class="vote-button"><span class="material-symbols-outlined vote-arrow">arrow_drop_up</span></a>
+            <p class="vote-count">123</p>
+            <a href=# class="vote-button"><span class="material-symbols-outlined vote-arrow">arrow_drop_down</span></a>
+          </div>
+          <div class="post-content">
+            <div class="author-bar post-bar">
+              <a href="#" class="post-author"><span
+                  class="material-symbols-outlined author-icon">face_6</span>Username</a>
+            </div>
+            <div class="title-bar post-bar">
+              <a href="#" class="post-title">This is a link to some cool content</a>
+            </div>
+            <div class="bottom-bar post-bar">
+              <a href="#" class="post-bottom-link">This is a link to some cool content</a>
+            </div>
+          </div>
+        </li>
+      </ul>
+      <!-- End Posts -->
+    </div>
+    <!-- End Container -->
+  </div>
+</body>
+
+</html>

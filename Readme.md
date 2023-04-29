@@ -1,7 +1,7 @@
 # Incense Voice
 ## Run
 ```
-deno run --allow-net --allow-read app.js
+deno run --allow-net --allow-env --allow-read server.js
 ```
 ## Dev Notes
 ### Initial user accounts

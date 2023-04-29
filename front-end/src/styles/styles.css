@@ -13,15 +13,18 @@
   --color-sagegreen: #9DC183;
   --color-warmbrown: #8B5A2B;
   --color-softblue: #B2D8D8;
+  --color-blue: #0088ff;
   --color-red: #ff0048;
   --color-cream: #F5F5DC;
   --font-body: 'Merriweather', serif;
   --font-heading: 'Montserrat', sans-serif;
+
+  --border-standard: solid 1px var(--color-warmbrown);
 }
 
 body {
   margin: 0 auto;
-  background-color: var(--color-white);
+  background-color: var(--color-offwhite);
   color: var(--color-black);
   font-family: var(--font-body);
 }
@@ -68,14 +71,22 @@ h1, h2, h3, h4, h5, h6 {
   margin-right: 0.5rem;
 }
 
+.search-icon {
+  position: absolute;
+  color: var(--color-deeppurple);
+  padding-left: 0.5rem;
+}
+
 #nav-search {
-  border: solid 2px var(--color-warmbrown);
+  border: var(--border-standard);
   background-color: var(--color-offwhite);
   border-radius: 10.2px;
   padding: 0.5rem;
+  text-align: center;
   font-size: 0.8rem;
   font-style: italic;
   color: var(--color-deeppurple);
+
 }
 
 #nav-search:hover {
@@ -83,110 +94,192 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ------ End Navbar ----- */
+
+/* Header */
+.header {
+  height: 20rem;
+  margin-bottom: 2rem ;
+  background-color: var(--color-white);
+}
+
+.header-image {
+  height: 75%;
+  background-image: url('../assets/incense_bg.webp');
+  background-position: bottom center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.header-block {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  align-content: flex-end;
+  height: 25%;
+  gap: 1rem;
+  padding: 2rem;
+
+}
+
+.header-icon {
+  font-size: 4rem;
+  color: var(--color-white);
+  padding: 0.25rem;
+  border: 6px solid var(--color-white);
+  border-radius: 90px;
+  background-color: var(--color-deeppurple);
+}
+
+.title-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.forum-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0;
+
+}
+
+.subtitle {
+  font-size: 0.8rem;
+}
+
+.join-button {
+  background-color: var(--color-blue);
+  font-weight: 600;
+  color: var(--color-white);
+  padding: 0.5rem 1rem;
+  border-radius: 25px;
+  width: 6rem;
+  text-align: center;
+  margin-left: 2rem;
+  cursor: pointer;
+}
+
+.join-button:hover {
+  background-color: #3aa3ff;
+}
+
+.forum-subtitle {
+  padding-left: 2rem;
+  background-color: var(--color-white);
+  text-underline-offset: 4px;
+  text-decoration: underline;
+  text-decoration-color: var(--color-blue);
+  text-decoration-thickness: 3px;
+}
+
+/* ---- Main Styling ----  */
 .container {
   width: 100%;
   margin: 0 auto;
   height: calc(100vh - 10rem);
   height: calc(100dvh - 10rem);
+  text-align: center;
+  /* display: flex;
+	flex-direction: column;
+	gap: 30px;
+	justify-content: center; */
 }
 
-header {
-  background: var(--color-darkgreen);
-  color: var(--color-white);
-  height: 5rem;
-}
-
-main {
-  margin: 3% auto;
-}
-
-/* nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0 auto;
-  padding: 1rem;
-  font-size: 1.4rem;
-}
-
-.logo {
-  padding: 0.5rem;
-}
-
-.logo a {
-  font-family: var(--font-heading);
-  text-decoration: none;
-  font-size: 1.8rem;
-  color: var(--color-white);
-}
-
-.logo a span {
-  color: var(--color-darkblue);
-}
-
-.menu ul {
-  margin: 0;
-  padding: 0;
-}
-
-.menu li {
-  margin-left: 2rem;
-}
-
-.menu a {
-  font-family: var(--font-body);
-  font-size: 1.2rem;
-}
-
-#logout-box {
-  font-size: 0.8rem;
-  background: var(--color-blue);
-  padding: 0.5rem;
-  border: solid 1px var(--color-offwhite);
-  border-radius: 8px;
-}
-
-#logout-box:hover {
-  background: var(--color-darkblue);
-}
-
-#current {
-  color: var(--color-darkblue);
-  font-weight: 700;
-  text-decoration: underline;
-  text-underline-offset: 2px;
-}
-
-#welcome-text {
-  font-size: 0.8rem;
-  text-align: right;
-  margin: 0.5rem;
-}
-
-.burger {
-  display: block;
-  font-size: 2rem;
-  color: var(--color-white);
-  cursor: pointer;
-}
-
-.burger span {
-  display: block;
-  width: 30px;
-  height: 4px;
-  margin-bottom: 5px;
+.card {
+  width: 50%;
+  max-width: 900px;
+  margin: 1rem auto;
+  padding: 0.75rem;
+  border: var(--border-standard);
+  border-radius: 6px;
   background-color: var(--color-white);
-} */
+}
 
-/* --------------------------- END Navbar Styling -----------------------------*/
+.new-post-card {
+  display: inline-flex;
+  gap: 1rem;
+}
 
+.user-icon {
+  font-size: 2.5rem;
+}
 
-/* --------------------------- END General Styling -----------------------------*/
-/* --------------------------------------------------------------------------- */
+.new-post-input {
+  width: 100%;
+  border: var(--border-standard);
+  border-radius: 6px;
+  background-color: var(--color-offwhite);
+  color: var(--color-lightgrey);
+  padding: 0.5rem 1rem;
+  text-align: left;
+  font-size: 0.8rem;
+}
 
+.post {
+  display: flex;
+  gap: 1rem;
+}
 
+.vote-bar {
+  width: 2rem;
+}
 
+.vote-button {
+  color: var(--color-deeppurple);
+}
 
+.vote-button:hover {
+  color: var(--color-sagegreen);
+}
+
+.vote-arrow {
+  font-size: 2rem;
+}
+
+.vote-count {
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.post-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+  width: 100%;
+  gap: 0.5rem;
+}
+.post-bar {
+  width: 100%;
+}
+
+.author-bar {
+  font-size: 0.8rem;
+}
+
+.post-author {
+
+  display: inline-flex;
+  align-items: center;
+}
+
+.title-bar {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.post-title {
+
+}
+
+.bottom-bar {
+  font-size: 0.8rem;
+}
+
+@media only screen and (max-width: 830px) {
+  .card {
+    width: 90%;
+  }
+}
 /* --------------------------- Login Screen Styling -----------------------------*/
 /*
 #title-block {
