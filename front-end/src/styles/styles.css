@@ -14,7 +14,9 @@
   --color-warmbrown: #8B5A2B;
   --color-softblue: #B2D8D8;
   --color-blue: #0088ff;
+  --color-blue-hover: #3aa3ff;
   --color-red: #ff0048;
+  --color-red-hover: #ff5082;
   --color-cream: #F5F5DC;
   --font-body: 'Merriweather', serif;
   --font-heading: 'Montserrat', sans-serif;
@@ -159,7 +161,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .join-button:hover {
-  background-color: #3aa3ff;
+  background-color: var(--color-blue-hover);
 }
 
 .forum-subtitle {
@@ -281,7 +283,7 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 /* --------------------------- Login Screen Styling -----------------------------*/
-/*
+
 #title-block {
   text-align: center;
   padding: 3rem 0;
@@ -290,41 +292,29 @@ h1, h2, h3, h4, h5, h6 {
 
 
 #title {
-  font-size: clamp(4rem, 10vw, 6rem);
+  font-size: 2rem;
   font-family: var(--font-heading);
-  color: var(--color-darkblue);
+  color: var(--color-black);
 }
 
-#title span {
-  background: -webkit-linear-gradient(var(--color-green), var(--color-blue));
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
 
-#description {
-  font-style: italic;
-  font-weight: 400;
-  font-size: clamp(1.125rem, 5vw, 1.5rem);
-  color: var(--color-darkblue);
-}
 
-#login-box, #new-thread-block {
+#login-box {
   margin: 0 auto;
   min-width: 320px;
   width: 75%;
   max-width: 576px;
 }
 
-#login-box h2, #new-thread-form h2 {
+#login-box h2 {
   text-align: center;
   margin-bottom: 1rem;
-  color: var(--color-white);
+  color: var(--color-black);
 }
 
 form {
   padding: 2.5rem;
-  background: var(--color-darkblue);
+  background: var(--color-white);
   border-radius: 0.25rem;
 }
 
@@ -348,37 +338,39 @@ form {
 .form-control {
   display: block;
   width: 100%;
+  height: 3rem;
+  margin-top: 1rem;
   padding: 0.375rem 0.75rem;
-  color: var(--color-darkblue);
+  color: var(--color-lightgrey);
   font-size: 1rem;
-  background-color: #fff;
+  background-color: var(--color-offwhite);
   background-clip: padding-box;
-  border: 2px solid var(--color-white);
+  border: var(--border-standard);
   border-radius: 5px;
-  box-shadow: 2px 2px 5px var(--color-black);
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  /* box-shadow: 2px 2px 5px var(--color-black); */
+  /* transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; */
 }
-
+/*
 input {
   height: 3rem;
-}
+} */
 
 .form-control:hover {
   border: solid var(--color-white) 2px;
-  box-shadow: 0 0 5px var(--color-green);
+  box-shadow: 0 0 5px var(--color-sagegreen);
   font-weight: 100;
 }
 
 .form-control:focus {
   border: solid var(--color-green) 2px;
-  box-shadow: 0 0 5px var(--color-green);
+  box-shadow: 0 0 5px var(--color-deeppurple);
 }
 
-input, button, select, textarea {
+/* input, button, select, textarea {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
-}
+} */
 
 .button-group {
   text-align: center;
@@ -392,21 +384,27 @@ input, button, select, textarea {
   font-weight: 600;
   text-align: center;
   padding: 0.75rem;
-  background: var(--color-green);
   color: var(--color-white);
-  border: solid var(--color-white) 2px;
-  border-radius: 5px;
+  border-radius: 25px;
   cursor: pointer;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-#login-button {
-  width: 100%;
+.submit-button {
+  background: var(--color-blue);
+}
+
+.cancel-button {
+  background: var(--color-red);
 }
 
 .submit-button:hover {
-  background-color: var(--color-darkgreen);
-} */
+  background-color: var(--color-blue-hover);
+}
+
+.cancel-button:hover {
+  background: var(--color-red-hover);
+}
 
 /* ---------------------------  END Login Styling -----------------------------*/
 /* --------------------------------------------------------------------------- */
