@@ -1,4 +1,4 @@
-import { Router } from "https://deno.land/x/oak@v12.3.0/mod.ts";
+import { Router, Status } from "https://deno.land/x/oak@v12.3.0/mod.ts";
 import sodium from "https://deno.land/x/sodium@0.2.0/basic.ts";
 await sodium.ready;
 
@@ -21,6 +21,17 @@ const users = [
   }
 ];
 ////////////////////////////////////////////////////////////////
+
+router.get('/', async (context) => {
+  try {
+    await context.send({
+      root: `${Deno.cwd()}/front-end`,
+      index: "index.html",
+    });
+  } catch {
+    context.throw(Status.InternalServerError);
+  }
+});
 
 router.post("/users", async (context) => {
   // create a new user

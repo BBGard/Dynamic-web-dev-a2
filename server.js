@@ -4,17 +4,21 @@ import { Client } from "https://deno.land/x/postgres@v0.17.0/mod.ts";
 // Import middleware and routes
 import { sessionMiddleware } from "./middleware/session.js";
 import { router } from "./routes/routes.js"
+import { staticServe } from "./middleware/staticServe.js";
 
 
 // Auth
 // await sodium.ready;
 
 const app = new Application();
-// const router = new Router();
 
-// Setup session middleware
-// app.use(Session.initMiddleware());
+// Setup middleware
 app.use(sessionMiddleware);
+app.use(staticServe);
+
+// Setup routes
+app.use(router.routes());
+app.use(router.allowedMethods());
 
 // Connect to database
 const client = new Client({
@@ -27,27 +31,11 @@ const client = new Client({
 
 await client.connect(); // DB
 
-// Setup routes
-app.use(router.routes());
-app.use(router.allowedMethods());
 
-
-
-// Oak's built-in static serving
-// This serves up our index.html as the default page
-app.use(async (context, next) => {
-  try {
-    await context.send({
-      root: `${Deno.cwd()}/front-end`,
-      index: "index.html",
-    });
-  } catch (e){
-    // next();
-    console.log(e);
-  }
-});
-
-// deno run --allow-net --allow-env --allow-read server.js
-console.log("Server running on http://localhost:3000/");
+// Show connection in terminal
+app.addEventListener('listen', () => {
+  console.log("Server running on http://localhost:3000/");
+})
 
 await app.listen({ port: 3000 });
+// deno run --allow-net --allow-env --allow-read server.js
