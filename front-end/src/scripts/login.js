@@ -19,7 +19,7 @@ loginForm.addEventListener("submit", async (event) => {
 
   // Attempt login
   try {
-    const response = await fetch("/login", {
+    const response = await fetch("/auth", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -32,14 +32,15 @@ loginForm.addEventListener("submit", async (event) => {
 
     // Server errors here
     if (!response.ok) {
-      throw new Error("Server error.");
+      console.log(response);
+      // throw new Error("Server error.");
     }
 
     const data = await response.json();
 
     if (data.success) {
-      // Successful login
-      loginSuccess(data.username);
+      // Successful login, return home
+      window.location.href = "/";
     } else {
       // Show error from server
       errorMessage.textContent = data.message;

@@ -6,7 +6,8 @@ async function updateLoginButton() {
   const loginBtn = document.querySelector("#login-btn");
 
   // Check if already logged in
-  if (data.loggedIn) {
+  console.log(data.username);
+  if (data.username) {
     // Show username and add logout listener
     loginBtn.childNodes[1].textContent = `${data.username}`;
     loginBtn.addEventListener("click", async () => {
@@ -17,7 +18,7 @@ async function updateLoginButton() {
     // Show login button and add login listener
     loginBtn.childNodes[1].textContent = "Login";
     loginBtn.addEventListener("click", () => {
-      window.location.href = "/login-form";
+      window.location.href = "/login";
     });
   }
 }
