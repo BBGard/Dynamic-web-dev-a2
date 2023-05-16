@@ -70,6 +70,19 @@ router.get("/login.js", async (context) => {
   });
 });
 
+// Signup form
+router.get("/sign-up", async (context) => {
+  await send(context, "/sign-up.html", {
+    root: `${Deno.cwd()}/modules/views`,
+  });
+});
+// Script
+router.get("/sign-up.js", async (context) => {
+  await send(context, "/sign-up.js", {
+    root: `${Deno.cwd()}/modules/views`,
+  });
+});
+
 // Create new post form
 router.get("/create-new-post", requireAuthentication, async (context) => {
   console.log("Create new post");
