@@ -3,7 +3,7 @@ import sodium from "https://deno.land/x/sodium@0.2.0/basic.ts";
 await sodium.ready;
 import { loginUser, requireAuthentication } from "../middleware/auth.js";
 import { getPosts, createPost } from "../controllers/posts.js";
-import { getMembers } from "../controllers/members.js";
+import { getMembers, createMember } from "../controllers/members.js";
 import { client } from "../database/database.js";
 
 import {send} from "https://deno.land/x/oak@v7.4.1/mod.ts";
@@ -57,6 +57,7 @@ router.post("/auth", async (context) => {
 
 });
 
+
 // Login/signup page
 router.get("/login", async (context) => {
   await send(context, "/login.html", {
@@ -97,39 +98,10 @@ router.get("/create-new-post.js", requireAuthentication, async (context) => {
   });
 });
 
-router.get("/posts", getPosts); // Posts route
+router.get("/posts", getPosts); // Get posts route
 router.get("/members", getMembers); // Member route
-router.post("/posts", requireAuthentication, createPost);
+router.post("/new-member", createMember); // Create new member route
+router.post("/posts", requireAuthentication, createPost); // Create new post route
 
-
-
-// Setup routes
-// Homepage
-// Add a route to the root URL that retrieves a variable from the session
-// router.get("/", async (ctx) => {
-//   if (await ctx.state.session.get("name") === undefined) {
-//     //ctx.response.body = `<a href="/login">Login</a>`;
-//     console.log("No user logged in");
-//   } else {
-//     //ctx.response.body = `<p>Logged in as:
-//      // ${await ctx.state.session.get("name")}</p>`;
-//      console.log("User logged in");
-//   }
-//   ctx.response.type = "html";
-//   ctx.response.headers.set("Cache-Control", "no-store, max-age=0");
-// });
-
-// router.get("/login", (context) => {
-//   context.response.body = "Login";
-// });
-// router.get("/signup", (context) => {
-//   context.response.body = "Signup";
-// });
-
-// TODO add logout route
-// router.get('/login', async (context) => {
-//   context.response.body = await Deno.readTextFile('./front-end/src/views/login.html');
-//   context.response.headers.set("Content-Type", "text/html");
-// });
 
 export default router;

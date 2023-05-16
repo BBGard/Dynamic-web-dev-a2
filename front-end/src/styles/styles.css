@@ -293,10 +293,26 @@ h1, h2, h3, h4, h5, h6 {
 }
 /* --------------------------- Login Screen Styling -----------------------------*/
 
+#login-block {
+  background: var(--color-white);
+  border-radius: 0.25rem;
+  margin: 2.5rem auto;
+  text-align: center;
+  width: 75%;
+  max-width: 576px;
+  padding-bottom: 2rem;
+}
+
+#login-block a {
+  color: var(--color-blue);
+}
+
 #title-block {
+  margin: 0 auto;
   text-align: center;
   padding: 3rem 0;
-  width: 100%;
+  width: 75%;
+  max-width: 576px;
 }
 
 
@@ -313,18 +329,23 @@ h1, h2, h3, h4, h5, h6 {
   min-width: 320px;
   width: 75%;
   max-width: 576px;
+  border-top: solid 2px var(--color-lightgrey);
+  padding-top: 2rem;
 }
 
 #login-box h2 {
+  font-size: 1.6rem;
   text-align: center;
   margin-bottom: 1rem;
   color: var(--color-black);
 }
 
+
+
 form {
-  padding: 2.5rem;
+  /* padding: 2.5rem;
   background: var(--color-white);
-  border-radius: 0.25rem;
+  border-radius: 0.25rem; */
 }
 
 .form-group {

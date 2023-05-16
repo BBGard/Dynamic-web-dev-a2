@@ -1,19 +1,30 @@
 import sodium from "https://deno.land/x/sodium@0.2.0/basic.ts";
 import { client } from "../database/database.js";
 
+await sodium.ready;
+
 // Generate a random 32-byte salt for password hashing
 const salt = sodium.crypto_pwhash_SALTBYTES;
 const passwordSalt = sodium.randombytes_buf(salt);
 
 // Hash the password with the given salt
-function hashPassword(password) {
-  const hash = sodium.crypto_pwhash_str(
-    password,
+export async function hashPassword(password) {
+
+  // const hash = sodium.crypto_pwhash_str(
+  //   password,
+  //   sodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,
+  //   sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE,
+  //   passwordSalt
+  // );
+
+  const p_hash = sodium.crypto_pwhash_str(password,
     sodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,
     sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE,
     passwordSalt
   );
-  return hash;
+  console.log(`Hashed: ${p_hash}`);
+
+  return p_hash.toString();
 }
 
 // Check if a password matches its hashed value
@@ -21,15 +32,6 @@ function verifyPassword(password, hash) {
   return sodium.crypto_pwhash_str_verify(hash, password);
 }
 
-// Add a new user to the database
-export async function addUser(username, password) {
-  const hashedPassword = hashPassword("password");
-  await client.queryObject(
-    "INSERT INTO users (username, password) VALUES ($1, $2)",
-    username,
-    hashedPassword
-  );
-}
 
 // Get a user by their username
 export async function getUserByUsername( username) {
