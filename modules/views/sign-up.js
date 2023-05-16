@@ -32,6 +32,7 @@ signUpForm.addEventListener("submit", async (event) => {
 
     // Server errors here
     if (!response.ok) {
+      console.log("not ok");
       console.log(response);
       // throw new Error("Server error.");
     }
@@ -40,6 +41,7 @@ signUpForm.addEventListener("submit", async (event) => {
 
     if (data.success) {
       // Successful signup, login and return home
+      console.log("signup success, login now");
       login(username, password);
     } else {
       // Show error from server

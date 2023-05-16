@@ -4,8 +4,9 @@ const passwordField = document.getElementById("password-field");
 const errorMessage = document.getElementById("error-message");
 const cancelBtn = document.getElementById("cancel-btn");
 
-loginForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
+// loginForm.addEventListener("submit", async (event) => {
+const handleLogin = async () => {
+  // event.preventDefault();
   console.log("Login clicked");
 
   if (!loginForm.checkValidity()) {
@@ -49,10 +50,23 @@ loginForm.addEventListener("submit", async (event) => {
     console.error("Login error:", error);
     errorMessage.textContent = "An internal error has occurred. Please try again later.";
   }
-});
+};
 
 cancelBtn.addEventListener("click", (event) => {
   event.preventDefault();
   console.log("Cancel clicked");
   window.location.href = "/";
 });
+
+// Submit button
+loginForm.addEventListener("submit", handleLogin);
+
+// Handle enter to submit
+const handleKeyPress = (event) => {
+  if (event.key === "Enter") {
+    handleLogin();
+  }
+};
+
+usernameField.addEventListener("keypress", handleKeyPress);
+passwordField.addEventListener("keypress", handleKeyPress);

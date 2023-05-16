@@ -442,6 +442,7 @@ form input {
 /* ------------------------- New Post Form -----------------------------------*/
 #new-post-form {
   margin: 5rem  auto;
+  padding: 1rem;
   background-color: var(--color-white);
   max-width: 80%;
 }
@@ -451,8 +452,9 @@ form input {
   margin-bottom: 1rem;
 }
 
-/* label {
-  color: var(--color-white);
+/* #new-post-form label {
+  margin-left: 0.5rem;
+  display: none;
 } */
 
 #new-post-form input, #new-post-form textarea {

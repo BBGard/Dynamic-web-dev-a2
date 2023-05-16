@@ -1,4 +1,5 @@
-console.log("Create new post.js");
+const newPostForm = document.querySelector('#new-post-form');
+const errorMessage = document.getElementById("error-message");
 
 // Cancel button
 document.querySelector(".cancel-button").addEventListener("click", (event) => {
@@ -9,6 +10,15 @@ document.querySelector(".cancel-button").addEventListener("click", (event) => {
 
 document.querySelector(".submit-button").addEventListener("click", async(event) => {
   event.preventDefault();
+
+  if (!newPostForm.checkValidity()) {
+    // Display error message for invalid fields
+    errorMessage.textContent = "Please fill out all fields.";
+    return;
+  }
+
+  // Clear previous error message
+  errorMessage.textContent = "";
 
   // Grab the session data
   const response = await fetch("/session");
