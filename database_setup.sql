@@ -4,7 +4,7 @@
 -- This script sets up and populates
 -- the datatbase for "Incense Voice"
 --
--- USAGE: copy and paste into psql terminal
+-- USAGE: copy and paste into psql terminal or run: \i database_setup.sql
 --
 
 --
@@ -50,6 +50,7 @@ CREATE TABLE posts (
   post_id SERIAL PRIMARY KEY,
   post_title VARCHAR(50) NOT NULL,
   post_description VARCHAR(100) NOT NULL,
+  post_url VARCHAR(1000) NOT NULL DEFAULT '#',
   post_created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   post_hidden BOOLEAN DEFAULT FALSE,
   post_rating INTEGER DEFAULT 0,
@@ -60,34 +61,42 @@ CREATE TABLE posts (
 
 --
 -- INSERT some post data
-INSERT INTO posts (post_title, post_description, post_rating, member_id, post_author)
-SELECT 'Good scent samplers.', 'Check out these great scent samplers I found!', 10, 1, members.username
+INSERT INTO posts (post_title, post_description, post_url, post_rating, member_id, post_author)
+SELECT 'Good scent samplers.', 'Check out these great scent samplers I found!', 'https://www.reddit.com/r/Incense/comments/13ic09k/good_scent_samplers/', 10, 1, members.username
 FROM members
 WHERE members.member_id = 1;
 
-INSERT INTO posts (post_title, post_description, post_rating, member_id, post_author)
-SELECT 'mica plate on charcoal', 'Awesome way to burn your incense.', 5, 2, members.username
+INSERT INTO posts (post_title, post_description, post_url, post_rating, member_id, post_author)
+SELECT 'mica plate on charcoal', 'Awesome way to burn your incense.', 'https://www.reddit.com/r/Incense/comments/13i2asa/mica_plate_on_charcoal/', 5, 2, members.username
 FROM members
 WHERE members.member_id = 2;
 
-INSERT INTO posts (post_title, post_description, post_rating, member_id, post_author)
-SELECT 'Kunmeido Asuka and Tennendo Enkuu Horizon.', 'These are possibly my two favourite smelling sticks!', 2, 1, members.username
+INSERT INTO posts (post_title, post_description, post_url, post_rating, member_id, post_author)
+SELECT 'Kunmeido Asuka and Tennendo Enkuu Horizon.', 'These are possibly my two favourite smelling sticks!', 'https://www.reddit.com/r/Incense/comments/13h3rbz/kunmeido_asuka_and_tennendo_enkuu_horizon_smell/', 2, 1, members.username
 FROM members
 WHERE members.member_id = 1;
 
-INSERT INTO posts (post_title, post_description, post_rating, member_id, post_author)
-SELECT 'Tibetan rope incense!', 'Get around it boys and girls!', 0, 3, members.username
+INSERT INTO posts (post_title, post_description, post_url, post_rating, member_id, post_author)
+SELECT 'Tibetan rope incense!', 'Get around it boys and girls!','https://www.reddit.com/r/Incense/comments/13gyg94/favorite_tibetan_rope_incense/', 0, 3, members.username
 FROM members
 WHERE members.member_id = 3;
 
-INSERT INTO posts (post_title, post_description, post_rating, member_id, post_author)
-SELECT 'dragon blood incense?', 'Just tried this. Smells like farts?', -3, 2, members.username
+INSERT INTO posts (post_title, post_description, post_url, post_rating, member_id, post_author)
+SELECT 'dragon blood incense?', 'Just tried this. Smells like farts?', 'https://www.reddit.com/r/Incense/comments/13gkwkv/which_brand_has_the_best_dragon_blood_incense/', -3, 2, members.username
 FROM members
 WHERE members.member_id = 2;
 
 --
 -- Postgres admin setup
 --
+
+-- Revoke privileges from incense user
+REVOKE ALL PRIVILEGES ON DATABASE itech3108_30399545_a2 FROM incense;
+REVOKE ALL PRIVILEGES ON TABLE members FROM incense;
+REVOKE ALL PRIVILEGES ON TABLE posts FROM incense;
+REVOKE USAGE ON SEQUENCE members_member_id_seq FROM incense;
+REVOKE USAGE ON SEQUENCE posts_post_id_seq FROM incense;
+
 -- Drop postgres user if they exist
 DROP USER IF EXISTS incense;
 

@@ -347,7 +347,7 @@ form {
 .form-control {
   display: block;
   width: 100%;
-  height: 3rem;
+  /* height: 3rem; */
   margin-top: 1rem;
   padding: 0.375rem 0.75rem;
   color: var(--color-lightgrey);
@@ -359,10 +359,10 @@ form {
   /* box-shadow: 2px 2px 5px var(--color-black); */
   /* transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; */
 }
-/*
-input {
+
+form input {
   height: 3rem;
-} */
+}
 
 .form-control:hover {
   border: solid var(--color-white) 2px;
@@ -418,6 +418,62 @@ input {
 /* ---------------------------  END Login Styling -----------------------------*/
 /* --------------------------------------------------------------------------- */
 
+/* ------------------------- New Post Form -----------------------------------*/
+#new-post-form {
+  margin: 5rem  auto;
+  background-color: var(--color-white);
+  max-width: 80%;
+}
+
+#new-post-form h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+/* label {
+  color: var(--color-white);
+} */
+
+#new-post-form input, #new-post-form textarea {
+  margin-top: 0.4rem;
+  box-shadow: none;
+}
+
+.cancel-button {
+  margin-right: 10%;
+}
+
+#new-post-form .form-control {
+  border: solid var(--color-white) 2px;
+
+}
+
+#new-post-form .form-control:hover {
+  box-shadow: 0 0 5px var(--color-sagegreen);
+  font-weight: 100;
+}
+
+#new-post-form .form-control:focus {
+  border: solid var(--color-green) 2px;
+  box-shadow: 0 0 5px var(--color-deeppurple);
+  color: var(--color-black);
+}
+
+
+/* Screens under 830px */
+@media only screen and (max-width: 830px) {
+  #new-post-form {
+    max-width: 100%;
+  }
+}
+
+/* Screens over 1100px wide */
+@media only screen and (min-width: 1100px) {
+  #new-post-form {
+    max-width: 50%;
+  }
+}
+/* -------------------- End New Post Form Styling ---------------------- */
 
 /* --------------------------- Forum Styling -----------------------------*/
 

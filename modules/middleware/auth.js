@@ -61,3 +61,16 @@ export async function loginUser( username, password) {
   }
 
 }
+
+export const requireAuthentication = async (context, next) => {
+  // Retrieve the user session
+  const loggedIn = await context.state.session.get("user");
+
+  if (loggedIn) {
+    // User is authenticated, proceed to the next middleware or route handler
+    await next();
+  } else {
+    // User is not authenticated, redirect to login or show an error page
+    context.response.redirect("/login");
+  }
+};
