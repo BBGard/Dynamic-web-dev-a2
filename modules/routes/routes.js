@@ -2,6 +2,8 @@ import { Router, Status } from "https://deno.land/x/oak@v12.3.0/mod.ts";
 import sodium from "https://deno.land/x/sodium@0.2.0/basic.ts";
 await sodium.ready;
 import { loginUser } from "../middleware/auth.js";
+import { getPosts } from "../controllers/posts.js";
+import { getMembers } from "../controllers/members.js";
 
 export const router = new Router();
 
@@ -40,6 +42,13 @@ router.post("/auth", async (context) => {
 
 });
 
+
+router.get("/posts", getPosts); // Posts route
+router.get("/members", getMembers); // Member route
+
+
+
+//----------------------------- OLD CRAP ---------------------------------------
 // Users route
 router.post("/users", async (context) => {
   // create a new user

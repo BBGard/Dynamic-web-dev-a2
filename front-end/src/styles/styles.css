@@ -216,6 +216,11 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 0.8rem;
 }
 
+#posts {
+  margin-bottom: 5rem;
+  padding: 1rem;
+}
+
 .post {
   display: flex;
   gap: 1rem;
@@ -262,6 +267,10 @@ h1, h2, h3, h4, h5, h6 {
 
   display: inline-flex;
   align-items: center;
+}
+
+.author-points {
+  margin-left: 1rem;
 }
 
 .title-bar {
