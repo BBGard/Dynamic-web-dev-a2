@@ -3,10 +3,10 @@ export async function buildPosts(state) {
   const postList = document.querySelector("#post-list");
   postList.innerHTML = "";
 
-  // Move all this crap elsewhere?
   for (let post of state.posts) {
     const li = document.createElement("li");
     li.className = "card post";
+    li.id = `post-${post.post_id}`; // Set an id on the post
 
     const voteBar = document.createElement("div");
     voteBar.className = "vote-bar";
@@ -53,6 +53,7 @@ export async function buildPosts(state) {
     authorPoints.className = "author-points";
 
     if (state.members.hasOwnProperty(post.post_author)) {
+      console.log("it does here");
       authorPoints.textContent = `${
         state.members[post.post_author].points
       } points`;
@@ -97,7 +98,60 @@ export async function buildPosts(state) {
     li.appendChild(postContent);
     postList.append(li);
 
+
+
     // Add event listeners for votes and titles, etc
+
+    let memberId;
+    if (state.members.hasOwnProperty(post.post_author)) {
+      console.log("here");
+      console.log(state.members[post.post_author]);
+         memberId = state.members[post.post_author].member_id;
+    } else {
+      console.log("no such thing");
+    }
+     // Add event listeners for voting
+     upvoteLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      postVote(post.post_id, "up", memberId);
+    });
+     downvoteLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      postVote(post.post_id, "down", memberId);
+    });
+
+  }
+}
+
+// Send vote to server
+async function postVote(postId, vote, memberId) {
+  const voteData = { vote, memberId };
+  console.log("vote data before:");
+  console.log(voteData);
+  const response = await fetch(`/posts/${postId}/vote`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(voteData),
+  });
+
+  // Check for json
+  const contentType = response.headers.get("Content-Type");
+
+  if (response.ok) {
+    console.log("update post count");
+    if (contentType && contentType.includes("application/json")) {
+      const updatedPost = await response.json();
+      const voteCount = document.querySelector(`#post-${postId} .vote-count`);
+      voteCount.textContent = updatedPost.post_rating;
+    } else {
+      // This is hackey... fix me
+      console.log("Response body is not JSON");
+      window.location.href = "/login";
+    }
+  } else {
+    console.log("Handle errors");
   }
 }
 

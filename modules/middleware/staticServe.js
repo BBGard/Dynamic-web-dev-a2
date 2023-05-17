@@ -3,6 +3,7 @@ import {send} from "https://deno.land/x/oak@v7.4.1/mod.ts";
 export async function staticFiles(context) {
   const urlPathname = context.request.url.pathname;
 
+  // console.log(`here: ${urlPathname}`);
     // Home page
     await send(context, urlPathname, {
       root: `${Deno.cwd()}/front-end`,
@@ -11,6 +12,12 @@ export async function staticFiles(context) {
 
 }
 
+// export async function home(context) {
+//   await send(context, "/", {
+//     root: `${Deno.cwd()}/front-end`,
+//     index: "index.html",
+//   });
+// }
 
 // Login/signup page
 export async function loginPage(context) {

@@ -70,6 +70,11 @@ export const requireAuthentication = async (context, next) => {
     await next();
   } else {
     // User is not authenticated, redirect to login or show an error page
+    console.log("your not supposed to be here");
+    // User is not authenticated, return 401 Unauthorized status
+    context.response.status = 401;
+    context.response.body = { "error": "Unauthorized" };
     context.response.redirect("/login");
+
   }
 };

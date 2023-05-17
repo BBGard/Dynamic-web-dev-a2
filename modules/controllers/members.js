@@ -18,6 +18,15 @@ export async function createMember(context) {
   try {
     const clientCredentials = await context.request.body().value;
 
+    // Check for existing user
+    const userExists = await client.queryObject
+    `SELECT members.username FROM members WHERE members.username=${context.username}`;
+
+    if(userExists.rowCount != 0) {
+      console.log("That username exists!");
+      throw new Error("Username already exists.")
+    }
+
     const hashedPassword = await hashPassword(clientCredentials.password);
     // console.log(`Hashed_here: ${hashedPassword}`);
 

@@ -37,3 +37,62 @@ export async function createPost(context) {
   console.log("Created a new post");
   context.response.status = 201;
 }
+
+// Upvote or downvote a post
+export async function votePost(context) {
+  const postId = context.params.id;
+  const { vote, memberId } = await context.request.body().value;
+  // const vote = data.vote;
+  // const memberId = data.memberId;
+  console.log("My data");
+  console.log(vote);
+  console.log(memberId);
+
+  if (vote !== "up" && vote !== "down") {
+    context.response.status = 400;
+    context.response.body = { "error": "Invalid vote value. Expected 'up' or 'down'." };
+    return;
+  }
+
+  let updateResult;
+  // Setup the rating
+  if(vote === "up") {
+    // console.log("Up vote");
+    updateResult = await client.queryObject`
+    UPDATE posts
+    SET post_rating = post_rating + 1
+    WHERE post_id = ${postId}
+  `;
+  }
+  else if(vote === "down") {
+    // console.log("minus 1");
+    updateResult = await client.queryObject`
+    UPDATE posts
+    SET post_rating = post_rating - 1
+    WHERE post_id = ${postId}
+  `;
+  }
+
+
+
+  if (updateResult.rowCount === 0) {
+    context.response.status = 404;
+    context.response.body = { "error": "Post not found" };
+    return;
+  }
+
+  // Get the new voteCount
+  const result = await client.queryObject
+  `SELECT post_rating FROM posts WHERE post_id = ${postId}`;
+  // console.log("result");
+  // console.log(result);
+
+  if (result.rowCount === 0) {
+    context.response.status = 404;
+    context.response.body = { "error": "Post not found" };
+  } else {
+    const postRating = result.rows[0].post_rating;
+    context.response.status = 200;
+    context.response.body = { "message": "Vote counted successfully", "post_rating": postRating };
+  }
+}
