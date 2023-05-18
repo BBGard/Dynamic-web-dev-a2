@@ -18,24 +18,24 @@ router.get("/session", async (context) => {
   const loggedInUser = await context.state.session.get("user");
   let userId = null;
 
-  console.log(`loggedInUser: ${loggedInUser}`);
+  // console.log(`loggedInUser: ${loggedInUser}`);
   // Move this?
   if(loggedInUser) {
-    console.log("getting member crap");
+    // console.log("getting member crap");
     const member = await client.queryObject("SELECT member_id FROM members WHERE username = $1", [loggedInUser]);
 
-    console.log(`member here: ${member}`);
+    // console.log(`member here: ${member}`);
     if (member.rows.length > 0) {
       userId = member.rows[0].member_id;
-      console.log(`user id: ${userId}`);
+      // console.log(`user id: ${userId}`);
     }
     else {
       console.log("error?");
     }
   }
 
-  console.log("Checking session:");
-  console.log(loggedInUser);
+  // console.log("Checking session:");
+  // console.log(loggedInUser);
   context.response.body = { username: loggedInUser, id: userId };
 });
 

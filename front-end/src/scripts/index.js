@@ -31,7 +31,7 @@ async function updateLoginElements() {
   const loginBtn = document.querySelector("#login-btn");
 
   // Check if already logged in
-  console.log(data.username);
+  // console.log(data.username);
   if (data.username) {
     // Show username and add logout listener
     state.username = data.username;
@@ -64,12 +64,12 @@ async function updateLoginElements() {
 async function fetchMembers() {
   const response = await fetch("/members");
   state.members = await response.json();
-  console.log(state.members);
+  // console.log(state.members);
 }
 
 // Fetch posts from server
 async function fetchPosts() {
   const response = await fetch("/posts");
   state.posts = await response.json();
-  console.log(state.posts);
+  // console.log(state.posts);
 }

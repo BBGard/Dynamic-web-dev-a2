@@ -7,7 +7,7 @@ const cancelBtn = document.getElementById("cancel-btn");
 // loginForm.addEventListener("submit", async (event) => {
 const handleLogin = async () => {
   // event.preventDefault();
-  console.log("Login clicked");
+  // console.log("Login clicked");
 
   if (!loginForm.checkValidity()) {
     // Display error message for invalid fields
@@ -33,7 +33,8 @@ const handleLogin = async () => {
 
     // Server errors here
     if (!response.ok) {
-      console.log(response);
+      console.log("error in login.js");
+      // console.log(response);
       // throw new Error("Server error.");
     }
 
@@ -54,7 +55,7 @@ const handleLogin = async () => {
 
 cancelBtn.addEventListener("click", (event) => {
   event.preventDefault();
-  console.log("Cancel clicked");
+  // console.log("Cancel clicked");
   window.location.href = "/";
 });
 

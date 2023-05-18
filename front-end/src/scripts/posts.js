@@ -52,12 +52,11 @@ export async function buildPosts(state) {
     const authorPoints = document.createElement("p");
     authorPoints.className = "author-points";
 
-    if (state.members.hasOwnProperty(post.post_author)) {
-      console.log("it does here");
-      authorPoints.textContent = `${
-        state.members[post.post_author].points
-      } points`;
+    const matchingMember = state.members.find((member) => member.username === post.post_author);
+    if (matchingMember) {
+      authorPoints.textContent = `${matchingMember.incense_points} points`;
     } else {
+      console.log("couldn't find a matching member in posts.js");
       authorPoints.textContent = "0 points";
     }
 
@@ -100,17 +99,9 @@ export async function buildPosts(state) {
 
 
 
-    // Add event listeners for votes and titles, etc
-
-    let memberId;
-    if (state.members.hasOwnProperty(post.post_author)) {
-      console.log("here");
-      console.log(state.members[post.post_author]);
-         memberId = state.members[post.post_author].member_id;
-    } else {
-      console.log("no such thing");
-    }
      // Add event listeners for voting
+     const memberId = matchingMember.member_id;
+
      upvoteLink.addEventListener("click", (event) => {
       event.preventDefault();
       postVote(post.post_id, "up", memberId);
@@ -126,8 +117,6 @@ export async function buildPosts(state) {
 // Send vote to server
 async function postVote(postId, vote, memberId) {
   const voteData = { vote, memberId };
-  console.log("vote data before:");
-  console.log(voteData);
   const response = await fetch(`/posts/${postId}/vote`, {
     method: "POST",
     headers: {
@@ -136,22 +125,26 @@ async function postVote(postId, vote, memberId) {
     body: JSON.stringify(voteData),
   });
 
-  // Check for json
+  // Check for json response
   const contentType = response.headers.get("Content-Type");
 
   if (response.ok) {
-    console.log("update post count");
     if (contentType && contentType.includes("application/json")) {
-      const updatedPost = await response.json();
+      const upadatedData = await response.json();
+
+      // Update the DOM data for votes and incense points
       const voteCount = document.querySelector(`#post-${postId} .vote-count`);
-      voteCount.textContent = updatedPost.post_rating;
+      voteCount.textContent = upadatedData.post_rating;
+      const memberPoints = document.querySelector(`#post-${postId} .author-points`);
+      memberPoints.textContent = upadatedData.incense_points;
+      console.log("Fingers crossed!");
     } else {
       // This is hackey... fix me
       console.log("Response body is not JSON");
       window.location.href = "/login";
     }
   } else {
-    console.log("Handle errors");
+    console.log("Handle errors better in posts.js");
   }
 }
 

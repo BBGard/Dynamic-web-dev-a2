@@ -5,7 +5,7 @@ const errorMessage = document.getElementById("error-message");
 
 signUpForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  console.log("Login clicked");
+  // console.log("Login clicked");
 
   if (!signUpForm.checkValidity()) {
     // Display error message for invalid fields

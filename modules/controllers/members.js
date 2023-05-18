@@ -4,7 +4,7 @@ import { hashPassword } from "../middleware/auth.js";
 // Get member names from the db
 export async function getMembers(context) {
   const results =
-    await client.queryObject`SELECT members.member_id, members.username FROM members`;
+    await client.queryObject`SELECT members.member_id, members.username, members.incense_points FROM members`;
 
   // Map members to an array
   context.response.body = results.rows.map((r) => ({

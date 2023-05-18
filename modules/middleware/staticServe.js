@@ -66,7 +66,7 @@ export async function profileScript(context) {
 // router.get("/create-new-post", requireAuthentication, async (context) => {
 export async function createNewPostPage(context) {
 
-  console.log("Create new post");
+  // console.log("Create new post");
   await send(context, "/create-new-post.html", {
     root: `${Deno.cwd()}/modules/views`,
   });
