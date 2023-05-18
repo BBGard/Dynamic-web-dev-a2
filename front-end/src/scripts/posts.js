@@ -156,9 +156,11 @@ async function postVote(postId, vote, postMemberId, votingMemberId) {
         memberPoints.textContent = updatedData.incense_points;
       }
     } else {
-      // This is hackey... fix me
-      console.log("Response body is not JSON");
-      window.location.href = "/login";
+      // Redirect if needed
+      if (response.redirected) {
+        console.log("redirected");
+        window.location.href = response.url;
+      }
     }
   }
 }

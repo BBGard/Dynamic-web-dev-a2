@@ -17,12 +17,50 @@
   <link rel="stylesheet" href="./src/styles/styles.css">
 </head>
 
-<body>
-  <div class="container">
-    <p>Profile page</p>
+  <body id="root">
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <!-- Navbar -->
+    <div class="top-nav">
+      <div class="navbar">
+        <a href="/" class="nav-item"><span class="material-symbols-outlined">home</span>Incense Voice</a>
+        <a href="#" class="nav-item"><span class="material-symbols-outlined search-icon">search</span><input
+            id="nav-search" type="text" placeholder="Search incense voice"></a>
+        <a href="#" class="nav-item" id="favorites-btn"><span class="material-symbols-outlined">favorite</span>Favorites</a>
+        <a href="#" class="nav-item" id="login-btn"><span class="material-symbols-outlined">face_6</span>Login</a>
+      </div>
+      <!-- End Navbar -->
+    </div>
+    <header class="header">
+      <div class="header-image"></div>
+      <div class="header-block">
+        <span class="material-symbols-outlined header-icon">self_improvement</span>
+        <div class="title-block">
+          <h1 class="forum-title" id="name-title">Name here</h1>
+          <p class="subtitle">Welcome to your zen garden. </p>
+        </div>
+        <!-- <button class="join-button">Join</button> -->
+      </div>
+      <h2 class="forum-subtitle">Profile</h2>
+    </header>
+    <!-- Container -->
+    <div class="container">
+
+
+      <!-- Posts -->
+      <div id="posts">
+        <ul id="post-list">
+
+        </ul>
+        <!-- End Posts -->
+      </div>
+      <!-- End Container -->
+      <p>Profile page</p>
     <p>Favorites</p>
     <p>My Posts</p>
     <p>Logout</p>
+    </div>
+
+
 </body>
 
 </html>
