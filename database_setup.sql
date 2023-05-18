@@ -94,7 +94,12 @@ CREATE TABLE votes (
   vote_timestamp TIMESTAMP DEFAULT NOW()
 );
 
-
+-- Create favorites table to track which posts members favorited
+CREATE TABLE favorites (
+  member_id INT REFERENCES members(member_id),
+  post_id INT REFERENCES posts(post_id),
+  PRIMARY KEY (member_id, post_id)
+);
 
 
 --
@@ -105,8 +110,11 @@ CREATE TABLE votes (
 REVOKE ALL PRIVILEGES ON DATABASE itech3108_30399545_a2 FROM incense;
 REVOKE ALL PRIVILEGES ON TABLE members FROM incense;
 REVOKE ALL PRIVILEGES ON TABLE posts FROM incense;
+REVOKE ALL PRIVILEGES ON TABLE votes FROM incense;
+REVOKE ALL PRIVILEGES ON TABLE favorites FROM incense;
 REVOKE USAGE ON SEQUENCE members_member_id_seq FROM incense;
 REVOKE USAGE ON SEQUENCE posts_post_id_seq FROM incense;
+REVOKE USAGE ON SEQUENCE votes_vote_id_seq FROM incense;
 
 -- Drop postgres user if they exist
 DROP USER IF EXISTS incense;
@@ -118,6 +126,7 @@ GRANT ALL PRIVILEGES ON DATABASE itech3108_30399545_a2 TO incense;
 GRANT ALL PRIVILEGES ON TABLE members TO incense;
 GRANT ALL PRIVILEGES ON TABLE posts TO incense;
 GRANT ALL PRIVILEGES ON TABLE votes TO incense;
+GRANT ALL PRIVILEGES ON TABLE favorites TO incense;
 GRANT USAGE ON SEQUENCE members_member_id_seq TO incense;
 GRANT USAGE ON SEQUENCE posts_post_id_seq TO incense;
 GRANT USAGE ON SEQUENCE votes_vote_id_seq TO incense;

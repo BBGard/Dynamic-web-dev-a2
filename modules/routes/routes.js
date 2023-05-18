@@ -2,10 +2,11 @@ import { Router, Status } from "https://deno.land/x/oak@v12.3.0/mod.ts";
 import sodium from "https://deno.land/x/sodium@0.2.0/basic.ts";
 await sodium.ready;
 import { loginUser, requireAuthentication } from "../middleware/auth.js";
-import { getPosts, createPost, votePost } from "../controllers/posts.js";
-import { getMembers, createMember } from "../controllers/members.js";
+import { getPosts, createPost, votePost, getPostsForMember } from "../controllers/posts.js";
+import { getMembers, createMember, updateFavoritePosts, getFavoritePosts, getVotedPosts } from "../controllers/members.js";
 import { client } from "../database/database.js";
-import { createNewPostPage, createNewPostScript, loginPage, loginScript, profilePage, profileScript, signUpPage, signUpScript } from "../middleware/staticServe.js";
+import { createNewPostPage, createNewPostScript, loginPage, loginScript,
+  profilePage, profileScript, signUpPage, signUpScript } from "../middleware/staticServe.js";
 
 import {send} from "https://deno.land/x/oak@v7.4.1/mod.ts";
 
@@ -75,11 +76,14 @@ router.get("/profile.js", requireAuthentication, profileScript);
 router.get("/create-new-post", requireAuthentication, createNewPostPage);
 router.get("/create-new-post.js", requireAuthentication, createNewPostScript);
 router.get("/posts", getPosts); // Get posts route
+router.post("/myposts", requireAuthentication, getPostsForMember); // Get posts for a particular member route
+router.post("/myvotes", requireAuthentication, getVotedPosts); // Get posts for a particular member route
 router.get("/members", getMembers); // Member route
 router.post("/new-member", createMember); // Create new member route
 router.post("/posts", requireAuthentication, createPost); // Create new post route
 router.post("/posts/:id/vote", requireAuthentication, votePost); // voteRoute
-// router.get("/", home);
+router.post("/members/:id/favorite", requireAuthentication, updateFavoritePosts); // update favorite
+router.post("/members/:id/favorites", requireAuthentication, getFavoritePosts); // get favorites
 
 
 

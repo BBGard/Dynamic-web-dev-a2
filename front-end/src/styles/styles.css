@@ -17,6 +17,7 @@
   --color-blue: #0088ff;
   --color-blue-hover: #3aa3ff;
   --color-red: #ff0048;
+  --color-yellow: #fff200;
   --color-red-hover: #ff5082;
   --color-cream: #F5F5DC;
   --font-body: 'Merriweather', serif;
@@ -220,7 +221,7 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 0.8rem;
 }
 
-#posts {
+.posts {
   margin-bottom: 5rem;
   padding: 1rem;
 }
@@ -289,6 +290,12 @@ h1, h2, h3, h4, h5, h6 {
 .favorite-link:hover {
   color: var(--color-sagegreen);
 }
+
+/* Fill the favorite icon */
+.filled {
+  color: var(--color-red);
+}
+
 
 .author-points {
   margin-left: 1rem;

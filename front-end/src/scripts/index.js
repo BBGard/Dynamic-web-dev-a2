@@ -2,7 +2,7 @@ import { buildPosts, buildPostForm } from "./posts.js";
 
 // Global state to track logged in user, local posts, members, etc
 let state = {
-  username: null,
+  currentUsername: null,
   posts: {},
   members: {}
 };
@@ -13,14 +13,12 @@ window.addEventListener("DOMContentLoaded", setupForum);
 
 
 function setupForum() {
-  // Check if logged in
-  updateLoginElements();
-
   // Setup posts, state, etc
   fetchMembers()
   .then(() => fetchPosts())
-  // fetchPosts()
-  .then(() => buildPosts(state));
+  .then(() => updateLoginElements())
+  .then(() => buildPosts(state))
+  .then(() => saveState());
 }
 
 
@@ -34,23 +32,33 @@ async function updateLoginElements() {
   const loginBtn = document.querySelector("#login-btn");
   const joinButton = document.querySelector(".join-button");
   const favButton = document.querySelector("#favorites-btn");
-
-  // favButton.addEventListener("click", async (event) => {
-  //   event.preventDefault();
-  //   loadProfilePage();
-  // })
+  const profileBtn = document.querySelector("#profile-btn")
 
   // Check if already logged in
   if (data.username) {
     // Show username and add profile page redirect
-    state.username = data.username;
-    loginBtn.childNodes[1].textContent = `${data.username}`;
+    state.currentUsername = data.username;
+    loginBtn.childNodes[1].textContent = "Logout";
+    profileBtn.childNodes[1].textContent = `${data.username}`;
+    profileBtn.classList.remove('hidden');
     loginBtn.addEventListener("click", (event) => {
       console.log("click");
       event.preventDefault();
-      window.location.href = "/profile";
+      window.location.href = "/logout";
     });
 
+    // Grab the favorites
+    // console.log("grab the faves!");
+    const memberId = state.members.find((member) => member.username === state.currentUsername)?.member_id;
+    const favRespons = await fetch(`/members/${memberId}/favorites`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ memberId }),
+    });
+
+    state.favorites = await favRespons.json();
     // Hide join button
     joinButton.classList.add("hidden");
     favButton.classList.remove("hidden");
@@ -81,17 +89,6 @@ async function updateLoginElements() {
   }
 }
 
-// // Loads the profile page
-// async function loadProfilePage() {
-//   const response = await fetch("/profile");
-
-//   // Redirect if needed
-//   if (response.redirected) {
-//     console.log("redirected");
-//     window.location.href = response.url;
-//   }
-// }
-
 // Fetch members from server
 async function fetchMembers() {
   const response = await fetch("/members");
@@ -104,4 +101,10 @@ async function fetchPosts() {
   const response = await fetch("/posts");
   state.posts = await response.json();
   // console.log(state.posts);
+}
+
+// Save the state to local storage, to retrieve from profile pages
+function saveState() {
+  console.log("state saved");
+  localStorage.setItem("state", JSON.stringify(state));
 }

@@ -15,6 +15,20 @@ export async function getPosts(context) {
   })); // Add a new url to the post on the end
 }
 
+// Get posts for a particular member from the db
+export async function getPostsForMember(context) {
+  const { memberId } = await context.request.body().value;
+
+  const results =
+    await client.queryObject`SELECT posts.post_id, posts.post_title, posts.post_description, posts.post_url, posts.post_created_at, posts.post_hidden, posts.post_rating, posts.member_id, posts.post_author
+        FROM posts WHERE member_id = ${memberId}`;
+
+  // Map posts to an array
+  context.response.body = results.rows.map((r) => ({
+    ...r,
+  }));
+}
+
 // Create a new post, add to db
 export async function createPost(context) {
   if (!context.request.hasBody) {

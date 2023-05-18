@@ -8,7 +8,8 @@
   <link rel="manifest" href="./public/webmanifest.json" />
   <link rel="icon" href="./public/favicon.ico" type="image/x-icon">
   <!-- Google Material Icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <!-- <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" /> -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Merriweather:400,700&display=swap"
     rel="stylesheet">
@@ -26,7 +27,8 @@
         <a href="#" class="nav-item"><span class="material-symbols-outlined search-icon">search</span><input
             id="nav-search" type="text" placeholder="Search incense voice"></a>
         <a href="#" class="nav-item" id="favorites-btn"><span class="material-symbols-outlined">favorite</span>Favorites</a>
-        <a href="#" class="nav-item" id="login-btn"><span class="material-symbols-outlined">face_6</span>Login</a>
+        <a href="/profile" class="nav-item" id="profile-btn"><span class="material-symbols-outlined">face_6</span>Profile</a>
+        <a href="/logout" class="nav-item" id="login-btn"><span class="material-symbols-outlined">Settings</span>Logout</a>
       </div>
       <!-- End Navbar -->
     </div>
@@ -44,20 +46,31 @@
     </header>
     <!-- Container -->
     <div class="container">
-
-
-      <!-- Posts -->
-      <div id="posts">
-        <ul id="post-list">
+      <!-- My Posts -->
+      <div class="posts" id="my-posts">
+        <h1>My Posts</h1>
+        <ul class="post-list" id="my-post-list">
 
         </ul>
-        <!-- End Posts -->
+        <!-- My Posts -->
+
+        <!-- Rated -->
+      <div class="posts" id="rated-posts">
+        <h1>Rated Posts</h1>
+        <ul class="post-list" id="rated-post-list">
+
+        </ul>
+        <!-- End Rated -->
+
+      <!-- Favorites -->
+      <div class="posts" id="favorite-posts">
+        <h1>Favorite Posts</h1>
+        <ul class="post-list" id="favorite-post-list">
+
+        </ul>
+        <!-- End Favorites -->
       </div>
       <!-- End Container -->
-      <p>Profile page</p>
-    <p>Favorites</p>
-    <p>My Posts</p>
-    <p>Logout</p>
     </div>
 
 

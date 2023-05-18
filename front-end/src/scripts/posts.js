@@ -1,6 +1,6 @@
 // Build the post elements
 export async function buildPosts(state) {
-  const postList = document.querySelector("#post-list");
+  const postList = document.querySelector(".post-list");
   postList.innerHTML = "";
 
   for (let post of state.posts) {
@@ -98,8 +98,6 @@ export async function buildPosts(state) {
     bottomBar.appendChild(postDescription);
     postContent.appendChild(bottomBar);
 
-
-
     const favoriteBar = document.createElement("div");
     favoriteBar.className = "post-bar favorite-bar";
 
@@ -109,9 +107,15 @@ export async function buildPosts(state) {
 
     const favIcon = document.createElement("span");
     favIcon.className = "material-symbols-outlined favorite-icon";
-    favIcon.textContent = "star";
-        //TODO check if favorited by current user and fill?
-        // Also add favorite click listener
+    favIcon.textContent = "favorite";
+
+    // Set the fav icons filled, if required
+    if (
+      state.favorites &&
+      state.favorites.find((favorite) => favorite.post_id === post.post_id)
+    ) {
+      favIcon.classList.add("filled");
+    }
 
     const favText = document.createElement("p");
     favText.textContent = "Favorite";
@@ -124,26 +128,41 @@ export async function buildPosts(state) {
     li.appendChild(postContent);
     postList.append(li);
 
-
     // Add event listeners for voting
     const postMemberId = matchingMember.member_id; // Member ID of post author
-    let votingMemberId;
+    let currentMemberId;
     // If logged in, grab the id - code smell - get the id when setting up state?
-    if (state.username) {
+    if (state.currentUsername) {
       const currentMember = state.members.find(
-        (member) => member.username === state.username
+        (member) => member.username === state.currentUsername
       );
-      votingMemberId = currentMember.member_id; // Member ID of logged in user
+      currentMemberId = currentMember.member_id; // Member ID of logged in user
     }
 
     upvoteLink.addEventListener("click", (event) => {
       event.preventDefault();
 
-      postVote(post.post_id, "up", postMemberId, votingMemberId);
+      postVote(post.post_id, "up", postMemberId, currentMemberId);
     });
     downvoteLink.addEventListener("click", (event) => {
       event.preventDefault();
-      postVote(post.post_id, "down", postMemberId, votingMemberId);
+      postVote(post.post_id, "down", postMemberId, currentMemberId);
+    });
+
+    // Event listener for
+    favoriteLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      console.log("fav clicked");
+      postFavorite(post.post_id, currentMemberId);
+
+      // if(currentMemberId) {
+      //   console.log("logged in");
+      //   postFavorite(post.post_id, currentMemberId);
+      // }
+      // else {
+      //   console.log("not logged in");
+      //   window.location.href = "/login";
+      // }
     });
   }
 }
@@ -178,6 +197,50 @@ async function postVote(postId, vote, postMemberId, votingMemberId) {
           `#post-${postId} .author-points`
         );
         memberPoints.textContent = updatedData.incense_points;
+      }
+    } else {
+      // Redirect if needed
+      if (response.redirected) {
+        console.log("redirected");
+        window.location.href = response.url;
+      }
+    }
+  }
+}
+
+// Send favorite to server
+async function postFavorite(postId, memberId) {
+  const favoriteData = { postId, memberId };
+  const response = await fetch(`/members/${memberId}/favorite`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(favoriteData),
+  });
+
+  // Check for json response
+  const contentType = response.headers.get("Content-Type");
+
+  if (response.ok) {
+    if (contentType && contentType.includes("application/json")) {
+      const updatedData = await response.json();
+
+      // Check for any errors
+      if (updatedData.hasOwnProperty("error")) {
+        console.log("Error: Unable to add favorite.");
+        // TODO: Show an error message to the user
+      } else {
+        // Update the icon
+        const favIcon = document.querySelector(
+          `#post-${postId} .favorite-icon`
+        );
+        if (favIcon.classList.contains("filled")) {
+          // Remove fill
+          favIcon.classList.remove("filled");
+        } else {
+          favIcon.classList.add("filled");
+        }
       }
     } else {
       // Redirect if needed
