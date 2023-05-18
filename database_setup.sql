@@ -86,6 +86,17 @@ SELECT 'dragon blood incense?', 'Just tried this. Smells like farts?', 'https://
 FROM members
 WHERE members.member_id = 2;
 
+-- Create votes table to track which posts members have voted on
+CREATE TABLE votes (
+  vote_id SERIAL PRIMARY KEY,
+  post_id INTEGER REFERENCES posts (post_id),
+  member_id INTEGER REFERENCES members (member_id),
+  vote_timestamp TIMESTAMP DEFAULT NOW()
+);
+
+
+
+
 --
 -- Postgres admin setup
 --
@@ -106,5 +117,7 @@ CREATE USER incense WITH PASSWORD 'pword123';
 GRANT ALL PRIVILEGES ON DATABASE itech3108_30399545_a2 TO incense;
 GRANT ALL PRIVILEGES ON TABLE members TO incense;
 GRANT ALL PRIVILEGES ON TABLE posts TO incense;
+GRANT ALL PRIVILEGES ON TABLE votes TO incense;
 GRANT USAGE ON SEQUENCE members_member_id_seq TO incense;
 GRANT USAGE ON SEQUENCE posts_post_id_seq TO incense;
+GRANT USAGE ON SEQUENCE votes_vote_id_seq TO incense;

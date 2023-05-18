@@ -1,4 +1,5 @@
 import { client } from "../database/database.js";
+import { createVote, getVoteID } from "./votes.js";
 
 // Get posts from the db
 export async function getPosts(context) {
@@ -41,11 +42,11 @@ export async function createPost(context) {
 
 // Upvote or downvote a post
 export async function votePost(context) {
-  const postId = context.params.id;
-  const { vote, memberId } = await context.request.body().value;
+  // const postId = context.params.id;
+  const { postId, vote, postMemberId, votingMemberId } = await context.request.body().value;
 
   // If no memberId or valid vote
-  if (!memberId || (vote !== "up" && vote !== "down")) {
+  if (!postMemberId || (vote !== "up" && vote !== "down")) {
     context.response.status = 400;
     context.response.body = {
       error: "Invalid vote value or memberID. Expected 'up' or 'down'.",
@@ -53,36 +54,28 @@ export async function votePost(context) {
     return;
   }
 
-  // let updateResult;
-  // // Setup the rating
-  // if(vote === "up") {
-  //   // console.log("Up vote");
-  //   updateResult = await client.queryObject`
-  //   UPDATE posts
-  //   SET post_rating = post_rating + 1
-  //   WHERE post_id = ${postId}
-  // `;
-  // }
-  // else if(vote === "down") {
-  //   // console.log("minus 1");
-  //   updateResult = await client.queryObject`
-  //   UPDATE posts
-  //   SET post_rating = post_rating - 1
-  //   WHERE post_id = ${postId}
-  // `;
-  // }
+  // Check if the member has already voted on the post
+  const existingVote = await getVoteID(context);
+  // console.log(existingVote);
 
-  let updateResult;
-  // let updateValue = 0;
+  // console.log("The exisiting vote id");
+  // console.log(existingVote.voteId);
+  if(existingVote.voteId != null) {
+    console.log("returning");
+    // context.response.status = 409; // Conflict
+    context.response.body = {
+      error: "You have already voted on this post.",
+      ok: false,
+    };
+    return;
+  }
+  console.log("made it here");
 
-  // if (vote === "up") {
-  //   updateValue = 1;
-  // } else if (vote === "down") {
-  //   updateValue = -1;
-  // }
+
 
   // Set numeric value for the vote
   const voteValue = vote === "up" ? 1 : vote === "down" ? -1 : 0;
+  let updateResult;
 
   // Update the post_rating in the db
   if (voteValue !== 0) {
@@ -100,10 +93,11 @@ export async function votePost(context) {
   }
 
   // All good, update the members incence points
+  // TODO: move to members
   const memberUpdateResult = await client.queryObject`
     UPDATE members
     SET incense_points = incense_points + ${voteValue}
-    WHERE member_id = ${memberId}
+    WHERE member_id = ${postMemberId}
   `;
 
   if (memberUpdateResult.rowCount === 0) {
@@ -112,13 +106,21 @@ export async function votePost(context) {
     return;
   }
 
+  // Create a new Vote
+  const newVoteResult = await createVote(context);
+  if(!newVoteResult.ok) {
+    console.log("Errors mcgee");
+    context.response.status = 400;
+    context.response.body = { error: "Couldn't create vote??" };
+    return;
+  }
   // Get the new voteCount
   // const result =
   //   await client.queryObject`SELECT post_rating FROM posts WHERE post_id = ${postId}`;
   //   const result2 = client.queryObject`SELECT incense_points FROM members WHERE member_id = ${memberId}`;
   const [ratingResult, pointsResult] = await Promise.all([
     client.queryObject`SELECT post_rating FROM posts WHERE post_id = ${postId}`,
-    client.queryObject`SELECT incense_points FROM members WHERE member_id = ${memberId}`
+    client.queryObject`SELECT incense_points FROM members WHERE member_id = ${postMemberId}`
   ]);
 
   if (ratingResult.rowCount === 0 || pointsResult.rowCount === 0) {

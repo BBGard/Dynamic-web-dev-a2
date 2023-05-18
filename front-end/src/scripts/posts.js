@@ -52,7 +52,9 @@ export async function buildPosts(state) {
     const authorPoints = document.createElement("p");
     authorPoints.className = "author-points";
 
-    const matchingMember = state.members.find((member) => member.username === post.post_author);
+    const matchingMember = state.members.find(
+      (member) => member.username === post.post_author
+    );
     if (matchingMember) {
       authorPoints.textContent = `${matchingMember.incense_points} points`;
     } else {
@@ -72,13 +74,15 @@ export async function buildPosts(state) {
     const postTitle = document.createElement("a");
 
     // Make sure url is legit link - should probably verify before creating a post
-    if (!post.post_url.startsWith("http://") || !post.post_url.startsWith("https://")) {
-      postTitle.href=`http://${post.post_url}`;
+    if (
+      !post.post_url.startsWith("http://") ||
+      !post.post_url.startsWith("https://")
+    ) {
+      postTitle.href = `http://${post.post_url}`;
     } else {
       postTitle.href = post.post_url;
     }
     postTitle.target = "_blank";
-
 
     postTitle.className = "post-title";
     const postTitleContent = document.createTextNode(post.post_title);
@@ -97,26 +101,32 @@ export async function buildPosts(state) {
     li.appendChild(postContent);
     postList.append(li);
 
+    // Add event listeners for voting
+    const postMemberId = matchingMember.member_id; // Member ID of post author
+    let votingMemberId;
+    // If logged in, grab the id - code smell - get the id when setting up state?
+    if (state.username) {
+      const currentMember = state.members.find(
+        (member) => member.username === state.username
+      );
+      votingMemberId = currentMember.member_id; // Member ID of logged in user
+    }
 
-
-     // Add event listeners for voting
-     const memberId = matchingMember.member_id;
-
-     upvoteLink.addEventListener("click", (event) => {
+    upvoteLink.addEventListener("click", (event) => {
       event.preventDefault();
-      postVote(post.post_id, "up", memberId);
-    });
-     downvoteLink.addEventListener("click", (event) => {
-      event.preventDefault();
-      postVote(post.post_id, "down", memberId);
-    });
 
+      postVote(post.post_id, "up", postMemberId, votingMemberId);
+    });
+    downvoteLink.addEventListener("click", (event) => {
+      event.preventDefault();
+      postVote(post.post_id, "down", postMemberId, votingMemberId);
+    });
   }
 }
 
 // Send vote to server
-async function postVote(postId, vote, memberId) {
-  const voteData = { vote, memberId };
+async function postVote(postId, vote, postMemberId, votingMemberId) {
+  const voteData = { postId, vote, postMemberId, votingMemberId };
   const response = await fetch(`/posts/${postId}/vote`, {
     method: "POST",
     headers: {
@@ -130,21 +140,26 @@ async function postVote(postId, vote, memberId) {
 
   if (response.ok) {
     if (contentType && contentType.includes("application/json")) {
-      const upadatedData = await response.json();
+      const updatedData = await response.json();
 
-      // Update the DOM data for votes and incense points
-      const voteCount = document.querySelector(`#post-${postId} .vote-count`);
-      voteCount.textContent = upadatedData.post_rating;
-      const memberPoints = document.querySelector(`#post-${postId} .author-points`);
-      memberPoints.textContent = upadatedData.incense_points;
-      console.log("Fingers crossed!");
+      // Check for any errors
+      if (updatedData.hasOwnProperty("error")) {
+        console.log("You've already voted on this post!");
+        //TODO show an error message
+      } else {
+        // Update the DOM data for votes and incense points
+        const voteCount = document.querySelector(`#post-${postId} .vote-count`);
+        voteCount.textContent = updatedData.post_rating;
+        const memberPoints = document.querySelector(
+          `#post-${postId} .author-points`
+        );
+        memberPoints.textContent = updatedData.incense_points;
+      }
     } else {
       // This is hackey... fix me
       console.log("Response body is not JSON");
       window.location.href = "/login";
     }
-  } else {
-    console.log("Handle errors better in posts.js");
   }
 }
 
