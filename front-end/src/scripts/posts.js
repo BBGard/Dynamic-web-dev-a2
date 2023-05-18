@@ -98,8 +98,32 @@ export async function buildPosts(state) {
     bottomBar.appendChild(postDescription);
     postContent.appendChild(bottomBar);
 
+
+
+    const favoriteBar = document.createElement("div");
+    favoriteBar.className = "post-bar favorite-bar";
+
+    const favoriteLink = document.createElement("a");
+    favoriteLink.href = "#";
+    favoriteLink.className = "favorite-link";
+
+    const favIcon = document.createElement("span");
+    favIcon.className = "material-symbols-outlined favorite-icon";
+    favIcon.textContent = "star";
+        //TODO check if favorited by current user and fill?
+        // Also add favorite click listener
+
+    const favText = document.createElement("p");
+    favText.textContent = "Favorite";
+
+    favoriteLink.append(favIcon);
+    favoriteLink.append(favText);
+    favoriteBar.append(favoriteLink);
+    postContent.append(favoriteBar);
+
     li.appendChild(postContent);
     postList.append(li);
+
 
     // Add event listeners for voting
     const postMemberId = matchingMember.member_id; // Member ID of post author

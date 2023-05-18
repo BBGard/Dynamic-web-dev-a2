@@ -10,6 +10,7 @@
   --color-lightgrey: #acacac;
   --color-black: #141414;
   --color-deeppurple: #6A0DAD;
+  --color-iceblue: #dae0e6;
   --color-sagegreen: #9DC183;
   --color-warmbrown: #8B5A2B;
   --color-softblue: #B2D8D8;
@@ -26,7 +27,7 @@
 
 body {
   margin: 0 auto;
-  background-color: var(--color-offwhite);
+  background-color: var(--color-iceblue);
   color: var(--color-black);
   font-family: var(--font-body);
 }
@@ -187,9 +188,16 @@ h1, h2, h3, h4, h5, h6 {
   max-width: 900px;
   margin: 1rem auto;
   padding: 0.75rem;
-  border: var(--border-standard);
-  border-radius: 6px;
+  border-radius: 10px;
+
+  /* border: var(--border-standard); */
   background-color: var(--color-white);
+}
+
+.sort-card {
+  padding: 0.75rem;
+  border: var(--border-standard);
+  border-radius: 10.2px;
 }
 
 .new-post-card {
@@ -219,11 +227,13 @@ h1, h2, h3, h4, h5, h6 {
 
 .post {
   display: flex;
-  gap: 1rem;
+  /* gap: 1rem; */
 }
 
 .vote-bar {
   width: 2rem;
+  background-color: var(--color-offwhite);
+  padding-top: 1rem;
 }
 
 .vote-button {
@@ -249,20 +259,35 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: space-between;
   text-align: left;
   width: 100%;
-  gap: 0.5rem;
+  /* gap: 0.5rem; */
+  padding-top: 1rem;
 }
 .post-bar {
+  /* padding-top: 1rem; */
+  padding-left: 0.5rem;
   width: 100%;
 }
 
-.author-bar {
+.author-bar, .favorite-bar {
   font-size: 0.8rem;
+  /* padding-top: 1rem; */
 }
 
-.post-author {
-
+.post-author, .favorite-link {
   display: inline-flex;
   align-items: center;
+}
+
+.favorite-bar {
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+
+  background-color: var(--color-offwhite);
+
+}
+
+.favorite-link:hover {
+  color: var(--color-sagegreen);
 }
 
 .author-points {
@@ -272,13 +297,13 @@ h1, h2, h3, h4, h5, h6 {
 .title-bar {
   font-size: 1.2rem;
   font-weight: 700;
-}
-
-.post-title {
+  padding-top: 1rem;
 
 }
 
 .bottom-bar {
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
   font-size: 0.8rem;
 }
 
