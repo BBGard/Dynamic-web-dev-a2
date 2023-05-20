@@ -8,6 +8,7 @@
   --color-white: #ffffff;
   --color-offwhite: #f3f3f3;
   --color-lightgrey: #acacac;
+  --color-superlightgrey: #e8e8e8;
   --color-black: #141414;
   --color-deeppurple: #6A0DAD;
   --color-iceblue: #dae0e6;
@@ -197,9 +198,37 @@ h1, h2, h3, h4, h5, h6 {
 
 
 .sort-card {
-  padding: 0.75rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  padding: 0.75rem 2rem;
   border: var(--border-standard);
   border-radius: 10.2px;
+}
+
+.sort-card a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+}
+
+.sort-card a:hover {
+  color: var(--color-deeppurple);
+  background-color: var(--color-superlightgrey);
+}
+
+.sort-icon {
+  margin: 0.25rem;
+}
+
+.selected-icon {
+  color: var(--color-sagegreen);
+  background-color: var(--color-superlightgrey);
 }
 
 .new-post-card {

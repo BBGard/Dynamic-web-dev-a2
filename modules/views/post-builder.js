@@ -1,9 +1,39 @@
 const state = JSON.parse(localStorage.getItem("state"));
 
-export async function buildPostList(postListElement, postList) {
+export async function buildPostList(postListElement, postList, sortMethod = "date") {
   console.log("Post builder");
 
   postListElement.innerHTML = "";
+
+  console.log("Sort method: ");
+  console.log(sortMethod);
+  // Sort the postList based on sortMethod
+switch (sortMethod) {
+  case 'alphabetically':
+    // Sort alphabetically by post title
+    postList.sort((a, b) => a.post_title.localeCompare(b.post_title));
+    break;
+  case 'rating':
+    // Sort highest rated to lowest rated
+    postList.sort((a, b) => b.post_rating - a.post_rating);
+    break;
+  case 'authorPoints':
+    // Sort by author incense points
+    postList.sort((a, b) => {
+      const authorA = state.members.find((member) => member.username === a.post_author);
+      const authorB = state.members.find((member) => member.username === b.post_author);
+      return authorB.incense_points - authorA.incense_points;
+    });
+    break;
+  case 'date':
+    // Sort by post date
+    postList.sort((a, b) => new Date(b.post_created_at) - new Date(a.post_created_at));
+    break;
+  default:
+    // No sort method specified, sort by post date
+    postList.sort((a, b) => new Date(b.post_created_at) - new Date(a.post_created_at));
+    break;
+}
 
   for (let post of postList) {
     // Get the posts author

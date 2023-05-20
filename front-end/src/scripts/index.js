@@ -17,7 +17,6 @@ window.addEventListener("DOMContentLoaded", setupForum);
 function setupForum() {
   const postListElement = document.querySelector(".post-list");
 
-
   // Setup posts, state, etc
   fetchMembers()
   .then(() => fetchPosts())
