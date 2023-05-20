@@ -3,22 +3,13 @@ import { client } from "../database/database.js";
 
 await sodium.ready;
 
-// Generate a random 32-byte salt for password hashing
-const salt = sodium.crypto_pwhash_SALTBYTES;
-const passwordSalt = sodium.randombytes_buf(salt);
-
-// Hash the password with the given salt
+// Hash a password using sodium
 export async function hashPassword(password) {
-  // Salt
-  // const passwordSalt = sodium.randombytes_buf(sodium.crypto_pwhash_SALTBYTES);
-
-  // Pepper
-  const p_hash = sodium.crypto_pwhash_str(password,
+  const p_hash = sodium.crypto_pwhash_str(
+    password,
     sodium.crypto_pwhash_OPSLIMIT_INTERACTIVE,
-    sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE,
-    // passwordSalt
+    sodium.crypto_pwhash_MEMLIMIT_INTERACTIVE
   );
-  // console.log(`Hashed: ${p_hash}`);
 
   return p_hash;
 }
@@ -28,9 +19,8 @@ function verifyPassword(password, hash) {
   return sodium.crypto_pwhash_str_verify(hash, password);
 }
 
-
 // Get a user by their username
-export async function getUserByUsername( username) {
+export async function getUserByUsername(username) {
   const result = await client.queryObject(
     "SELECT member_id, username, password_hash FROM members WHERE username = $1",
     username
@@ -39,28 +29,23 @@ export async function getUserByUsername( username) {
   return result.rows[0];
 }
 
-export async function loginUser( username, password) {
+export async function verifyUser(username, password) {
   // Check for username and password hash in db
-  const result = await client.queryObject
-    `SELECT member_id, username, password_hash FROM members WHERE username=${username}`
-  ;
-
+  const result =
+    await client.queryObject`SELECT member_id, username, password_hash FROM members WHERE username=${username}`;
   // User not found error
-  if(result.rows.length == 0 ) {
-    // console.log("User not found");
+  if (result.rows.length == 0) {
     return { success: false, message: "User not found" };
-  }
-  else if(!verifyPassword(password, result.rows[0].password_hash)) {
-    // console.log("Wrong pword");
+  } else if (!verifyPassword(password, result.rows[0].password_hash)) {
+    // Wrong pword
     return { success: false, message: "Wrong password" };
+  } else {
+    // Success, return the username
+    return { success: true, username: username };
   }
-  else {
-    // console.log("All good");
-    return { success: true, username:username };
-  }
-
 }
 
+// Checks if a user is authenticated before proceding to next handler
 export async function requireAuthentication(context, next) {
   // Retrieve the user session
   const loggedIn = await context.state.session.get("user");
@@ -69,12 +54,64 @@ export async function requireAuthentication(context, next) {
     // User is authenticated, proceed to the next middleware or route handler
     await next();
   } else {
-    // User is not authenticated, redirect to login or show an error page
-    console.log("your not supposed to be here, redirecting");
-    // User is not authenticated, return 401 Unauthorized status
-    context.response.status = 401;
+    // User is not authenticated, redirect to login page
+    context.response.status = 401; // unauthorized
     context.response.body = { error: "Unauthorized" };
-    context.response.redirect("/login");
+    context.response.redirect("/login-page");
     return;
   }
-};
+}
+
+// Logs in a user
+export async function login(context) {
+  const clientCredentials = await context.request.body().value;
+
+  // Attempt login
+  const result = await verifyUser(
+    clientCredentials.username,
+    clientCredentials.password
+  );
+
+  if (result.success) {
+    // Logged in
+    context.response.body = result;
+
+    // Set the session details
+    await context.state.session.set("user", result.username);
+    return;
+  } else {
+    // Error, maybe add some mopre to this
+    context.response.body = result;
+    return;
+  }
+}
+
+// Logs a user out
+export async function logout(context) {
+  // Clear the session
+  await context.state.session.set("user", undefined);
+  // Clear the response body
+  context.response.body = {};
+  context.response.redirect("/");
+}
+
+
+// Checks if a user is logged in... returns the username and member_id
+export async function session(context) {
+  const loggedInUser = await context.state.session.get("user");
+  let userId = null;
+
+  // Move this?
+  if (loggedInUser) {
+    const member = await client.queryObject(
+      "SELECT member_id FROM members WHERE username = $1",
+      [loggedInUser]
+    );
+
+    if (member.rows.length > 0) {
+      userId = member.rows[0].member_id;
+    }
+  }
+
+  context.response.body = { username: loggedInUser, id: userId };
+}

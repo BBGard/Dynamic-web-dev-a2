@@ -1,40 +1,60 @@
-const state = JSON.parse(localStorage.getItem("state"));
+let state;  // We'll get state in a min
 
-export async function buildPostList(postListElement, postList, sortMethod = "date") {
-  console.log("Post builder");
+// Function to build all DOM elements for a given post list
+export async function buildPostList( postListElement, postList, currentState, sortMethod = "date-sort") {
+  state = currentState;
 
   postListElement.innerHTML = "";
 
-  console.log("Sort method: ");
-  console.log(sortMethod);
   // Sort the postList based on sortMethod
-switch (sortMethod) {
-  case 'alphabetically':
-    // Sort alphabetically by post title
-    postList.sort((a, b) => a.post_title.localeCompare(b.post_title));
-    break;
-  case 'rating':
-    // Sort highest rated to lowest rated
-    postList.sort((a, b) => b.post_rating - a.post_rating);
-    break;
-  case 'authorPoints':
-    // Sort by author incense points
-    postList.sort((a, b) => {
-      const authorA = state.members.find((member) => member.username === a.post_author);
-      const authorB = state.members.find((member) => member.username === b.post_author);
-      return authorB.incense_points - authorA.incense_points;
-    });
-    break;
-  case 'date':
-    // Sort by post date
-    postList.sort((a, b) => new Date(b.post_created_at) - new Date(a.post_created_at));
-    break;
-  default:
-    // No sort method specified, sort by post date
-    postList.sort((a, b) => new Date(b.post_created_at) - new Date(a.post_created_at));
-    break;
-}
+  switch (sortMethod) {
+    case "alphabet-sort":
+      // Sort alphabetically by post title
+      postList.sort((a, b) => a.post_title.localeCompare(b.post_title));
+      break;
+    case "rating-sort":
+      // Sort highest rated to lowest rated
+      postList.sort((a, b) => b.post_rating - a.post_rating);
+      break;
+    case "author-sort":
+      // Sort by author incense points
+      postList.sort((a, b) => {
+        const authorA = state.members.find(
+          (member) => member.username === a.post_author
+        );
+        const authorB = state.members.find(
+          (member) => member.username === b.post_author
+        );
+        return authorB.incense_points - authorA.incense_points;
+      });
+      break;
+    case "date-sort":
+      // Sort by post date
+      postList.sort(
+        (a, b) => new Date(b.post_created_at) - new Date(a.post_created_at)
+      );
+      break;
+    default:
+      // No sort method specified, sort by post date
+      postList.sort(
+        (a, b) => new Date(b.post_created_at) - new Date(a.post_created_at)
+      );
+      break;
+  }
 
+  // Setup sort icon
+  const sortCard = document.querySelector(".sort-card");
+  if (sortCard) {
+    // Remove "selected-icon" class from other elements
+    const selectedIcons = document.querySelectorAll(".selected-icon");
+    selectedIcons.forEach((icon) => icon.classList.remove("selected-icon"));
+
+    // Add "selected-icon" to the correct sort method
+    const sortButton = document.querySelector(`#${sortMethod}`).parentElement;
+    sortButton.classList.add("selected-icon");
+  }
+
+  // Build each post
   for (let post of postList) {
     // Get the posts author
     const postAuthor = state.members.find(
@@ -54,7 +74,7 @@ switch (sortMethod) {
   }
 }
 
-// Helper function to create a vote link
+// Create a vote link
 function createVoteLink(href, className, arrowText) {
   const voteLink = document.createElement("a");
   voteLink.href = href;
@@ -68,7 +88,7 @@ function createVoteLink(href, className, arrowText) {
   return voteLink;
 }
 
-// Helper function to create a post bar with author information
+// Create a post bar with author information
 function createAuthorBar(post) {
   const authorBar = document.createElement("div");
   authorBar.className = "post-bar author-bar";
@@ -85,6 +105,15 @@ function createAuthorBar(post) {
   const authorPoints = document.createElement("p");
   authorPoints.className = "author-points";
 
+  const pointsIcon = document.createElement("span");
+  pointsIcon.className = "material-symbols-outlined points-icon";
+  pointsIcon.textContent = "spa";
+
+  const postDate = document.createElement("p");
+  const date = new Date(post.post_created_at);
+  const formattedDate = date.toLocaleString();
+  postDate.textContent = formattedDate;
+
   const matchingMember = state.members.find(
     (member) => member.username === post.post_author
   );
@@ -97,13 +126,15 @@ function createAuthorBar(post) {
 
   authorLink.appendChild(authorIcon);
   authorLink.appendChild(username);
+  authorLink.appendChild(pointsIcon);
   authorLink.appendChild(authorPoints);
+  authorLink.appendChild(postDate);
   authorBar.appendChild(authorLink);
 
   return authorBar;
 }
 
-// Helper function to create a post title
+// Create a post title
 function createPostTitle(post) {
   const postTitle = document.createElement("a");
   const isValidURL =
@@ -125,7 +156,7 @@ function createPostTitle(post) {
   return postTitle;
 }
 
-// Helper function to create a post bar with description
+// Create a post bar with description
 function createDescriptionBar(post) {
   const bottomBar = document.createElement("div");
   bottomBar.className = "post-bar bottom-bar";
@@ -137,7 +168,7 @@ function createDescriptionBar(post) {
   return bottomBar;
 }
 
-// Helper function to create a favorite link
+// Create a favorite link
 function createFavoriteLink(post) {
   const favoriteLink = document.createElement("a");
   favoriteLink.href = "#";
@@ -163,7 +194,7 @@ function createFavoriteLink(post) {
   return favoriteLink;
 }
 
-// Helper function to create a hide post icon
+// Create a hide post icon
 function createHidePostIcon(post) {
   const hideLink = document.createElement("a");
   hideLink.href = "#";
@@ -188,7 +219,7 @@ function createHidePostIcon(post) {
   return hideLink;
 }
 
-// Helper function to create a post element
+// Create a post element
 function createPostElement(post, matchingMember, currentMemberId, isMyPost) {
   const li = document.createElement("li");
   li.className = "card post";
@@ -240,7 +271,6 @@ function createPostElement(post, matchingMember, currentMemberId, isMyPost) {
 
     favoriteBar.classList.add("my-post");
     voteBar.classList.add("my-post");
-
   }
 
   postContent.append(favoriteBar);
@@ -263,7 +293,6 @@ function createPostElement(post, matchingMember, currentMemberId, isMyPost) {
   // Favorite listener
   favoriteLink.addEventListener("click", (event) => {
     event.preventDefault();
-    console.log("fav clicked");
     postFavorite(post.post_id, currentMemberId);
   });
 
@@ -271,7 +300,6 @@ function createPostElement(post, matchingMember, currentMemberId, isMyPost) {
   if (hidePostIcon) {
     hidePostIcon.addEventListener("click", (event) => {
       event.preventDefault();
-      console.log("hide clicked");
       hidePost(post.post_id, currentMemberId);
     });
   }
@@ -300,20 +328,28 @@ async function postVote(postId, vote, postMemberId, votingMemberId) {
       // Check for any errors
       if (updatedData.hasOwnProperty("error")) {
         console.log("You've already voted on this post!");
-        //TODO show an error message
       } else {
         // Update the DOM data for votes and incense points
         const voteCount = document.querySelector(`#post-${postId} .vote-count`);
         voteCount.textContent = updatedData.post_rating;
-        const memberPoints = document.querySelector(
-          `#post-${postId} .author-points`
-        );
-        memberPoints.textContent = updatedData.incense_points;
+
+        const thisPostAuthor = state.members.find(
+          (member) => member.member_id === postMemberId
+        ).username;
+
+        const memberPointsElements = document.querySelectorAll(`a.post-author`);
+
+        // Loop over all memberPoints elements and update any with matching authors
+        memberPointsElements.forEach((element) => {
+          if (element.textContent.includes(thisPostAuthor)) {
+            const memberPoints = element.querySelector(".author-points");
+            memberPoints.textContent = updatedData.incense_points;
+          }
+        });
       }
     } else {
       // Redirect if needed
       if (response.redirected) {
-        console.log("redirected");
         window.location.href = response.url;
       }
     }
@@ -341,23 +377,52 @@ async function postFavorite(postId, memberId) {
       // Check for any errors
       if (updatedData.hasOwnProperty("error")) {
         console.log("Error: Unable to add favorite.");
-        // TODO: Show an error message to the user
       } else {
+
+
+
         // Update the icon
-        const favIcon = document.querySelector(
+        const favIcon = document.querySelectorAll(
           `#post-${postId} .favorite-icon`
         );
-        if (favIcon.classList.contains("filled")) {
+
+        const favPostList = document.querySelector("#favorite-post-list");
+
+        if (favIcon[0].classList.contains("filled")) {
           // Remove fill
-          favIcon.classList.remove("filled");
+          favIcon.forEach((icon) => {
+            icon.classList.remove("filled");
+          });
+
+          // Remove from fav list
+          if (favPostList) {
+            const postToRemove = favPostList.querySelector(`#post-${postId}`);
+            postToRemove.remove();
+            console.log("removed");
+          }
+
         } else {
-          favIcon.classList.add("filled");
+          favIcon.forEach((icon) => {
+            icon.classList.add("filled");
+          });
+          // TODO copy post add to favorite list
         }
+        // TODO updateState?
+
+        // // Update the icon
+        // const favIcon = document.querySelector(
+        //   `#post-${postId} .favorite-icon`
+        // );
+        // if (favIcon.classList.contains("filled")) {
+        //   // Remove fill
+        //   favIcon.classList.remove("filled");
+        // } else {
+        //   favIcon.classList.add("filled");
+        // }
       }
     } else {
       // Redirect if needed
       if (response.redirected) {
-        console.log("redirected");
         window.location.href = response.url;
       }
     }
@@ -366,7 +431,6 @@ async function postFavorite(postId, memberId) {
 
 // Hides a post
 async function hidePost(postId, memberId) {
-  console.log("hiding (or unhiding) a post");
   const postData = { postId, memberId };
   const response = await fetch(`/posts/${postId}/hide`, {
     method: "POST",
@@ -377,7 +441,6 @@ async function hidePost(postId, memberId) {
   });
 
   if (response.ok) {
-
     // Update icons and text for ALL matching posts
     const allPosts = document.querySelectorAll(`#post-${postId}`);
 
@@ -398,9 +461,17 @@ async function hidePost(postId, memberId) {
         postTitle.classList.add("italic");
         hideText.textContent = "Show Post";
       }
+
+      // If on the homepage, remove from view
+      const homePostList = document.querySelector("#home-post-list");
+      if (homePostList) {
+        allPosts.forEach((post) => {
+          post.remove();
+        });
+      }
     });
   } else {
-    console.log("respons not ok, handle this");
+    console.log("response not ok, handle this");
   }
 }
 

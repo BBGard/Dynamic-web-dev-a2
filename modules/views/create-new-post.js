@@ -8,6 +8,7 @@ document.querySelector(".cancel-button").addEventListener("click", (event) => {
   window.location.href = "/";
 });
 
+// Submit button
 document.querySelector(".submit-button").addEventListener("click", async(event) => {
   event.preventDefault();
 
@@ -51,14 +52,12 @@ document.querySelector(".submit-button").addEventListener("click", async(event) 
 
     if (response.ok) {
       // Post created successfully, do something
-      console.log("Post created successfully");
       window.location.href = "/";
     } else {
       // Error creating post, handle the error
       console.error("Error creating post:", response.status);
     }
   } catch (error) {
-    // Network error or other error occurred, handle the error
     console.error("Error:", error.message);
   }
 });

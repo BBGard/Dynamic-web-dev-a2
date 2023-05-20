@@ -4,11 +4,11 @@ const passwordField = document.getElementById("password-field");
 const errorMessage = document.getElementById("error-message");
 const cancelBtn = document.getElementById("cancel-btn");
 
-// loginForm.addEventListener("submit", async (event) => {
-const handleLogin = async () => {
-  // event.preventDefault();
-  // console.log("Login clicked");
+// Handle the form submission
+async function handleLogin(event) {
+  event.preventDefault();
 
+  // Check form validity
   if (!loginForm.checkValidity()) {
     // Display error message for invalid fields
     errorMessage.textContent = "Please fill out all fields.";
@@ -20,7 +20,7 @@ const handleLogin = async () => {
 
   // Attempt login
   try {
-    const response = await fetch("/auth", {
+    const response = await fetch("/login", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -33,9 +33,7 @@ const handleLogin = async () => {
 
     // Server errors here
     if (!response.ok) {
-      console.log("error in login.js");
-      // console.log(response);
-      // throw new Error("Server error.");
+      console.log(response);
     }
 
     const data = await response.json();
@@ -53,21 +51,25 @@ const handleLogin = async () => {
   }
 };
 
+// Cancel button handler
 cancelBtn.addEventListener("click", (event) => {
   event.preventDefault();
   // console.log("Cancel clicked");
   window.location.href = "/";
 });
 
-// Submit button
-loginForm.addEventListener("submit", handleLogin);
+// Login form submit handler
+loginForm.addEventListener("submit", async (event) => {
+  handleLogin(event);
+});
 
-// Handle enter to submit
-const handleKeyPress = (event) => {
+// Handle enter key to submit
+const handleKeyPress = async (event) => {
   if (event.key === "Enter") {
-    handleLogin();
+    handleLogin(event);
   }
 };
 
+// Keypress listsners
 usernameField.addEventListener("keypress", handleKeyPress);
 passwordField.addEventListener("keypress", handleKeyPress);

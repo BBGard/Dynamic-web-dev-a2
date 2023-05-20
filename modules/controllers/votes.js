@@ -8,6 +8,7 @@ export async function createVote(context) {
   if (!votingMemberId || !postId) {
     context.response.status = 400;
     context.response.body = {
+      success: false,
       error: "Invalid memberID or post ID.",
     };
     return { ok: false };
@@ -18,14 +19,21 @@ export async function createVote(context) {
   INSERT INTO votes (post_id, member_id)
   VALUES (${postId}, ${votingMemberId})`;
 
-  console.log("Created a new vote");
-  context.response.status = 201;
-  context.response.body = {
-    ok: true,
-    success: true,
-    message: "Vote added!",
-  };
-  return { ok: true };
+  if (result.rowCount != 0) {
+    context.response.status = 201;
+    context.response.body = {
+      success: true,
+      message: "Vote added!",
+    };
+    return { ok: true };
+  } else {
+    context.response.status = 500;
+    context.response.body = {
+      success: false,
+      message: "Database error",
+    };
+    return { ok: false };
+  }
 }
 
 // Gets the vote_id for a member and post
@@ -36,23 +44,29 @@ export async function getVoteID(context) {
   if (!votingMemberId || !postId) {
     context.response.status = 400;
     context.response.body = {
+      success: false,
       error: "Invalid memberID or post ID.",
     };
     return { ok: false };
   }
 
+  // Get the specified vote_id
   const existingVote = await client.queryObject`
     SELECT vote_id
     FROM votes
     WHERE post_id = ${postId} AND member_id = ${votingMemberId}
   `;
 
+  // Error
   if (existingVote.rowCount === 0) {
-    // console.log("haven't voted yet");
-    return { ok: false, voteId: null };
+    context.response.status = 500;
+    context.response.body = {
+      success: false,
+      message: "Database error",
+    };
+    return { ok: false };
   }
 
   // Return the voteId
-  // console.log("already voted");
   return { ok: true, voteId: existingVote.rows[0].vote_id };
 }

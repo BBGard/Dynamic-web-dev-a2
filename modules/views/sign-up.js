@@ -3,16 +3,16 @@ const usernameField = document.getElementById("username-field");
 const passwordField = document.getElementById("password-field");
 const errorMessage = document.getElementById("error-message");
 
+// Submit listener
 signUpForm.addEventListener("submit", async (event) => {
   event.preventDefault();
-  // console.log("Login clicked");
 
+  // Check form valifity
   if (!signUpForm.checkValidity()) {
     // Display error message for invalid fields
     errorMessage.textContent = "Please fill out all fields.";
     return;
   }
-
 
   const username = usernameField.value;
   const password = passwordField.value;
@@ -32,16 +32,14 @@ signUpForm.addEventListener("submit", async (event) => {
 
     // Server errors here
     if (!response.ok) {
-      console.log("not ok");
+      console.log("error in signup");
       console.log(response);
-      // throw new Error("Server error.");
     }
 
     const data = await response.json();
 
     if (data.success) {
       // Successful signup, login and return home
-      console.log("signup success, login now");
       login(username, password);
     } else {
       // Show error from server
@@ -54,10 +52,11 @@ signUpForm.addEventListener("submit", async (event) => {
 
 });
 
+// To login the new user after signup
 async function login(username, password) {
   // Attempt login
   try {
-    const response = await fetch("/auth", {
+    const response = await fetch("/login", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -71,7 +70,6 @@ async function login(username, password) {
     // Server errors here
     if (!response.ok) {
       console.log(response);
-      // throw new Error("Server error.");
     }
 
     const data = await response.json();

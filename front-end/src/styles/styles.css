@@ -251,6 +251,11 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 0.8rem;
 }
 
+.new-post-input:hover {
+  border-color: var(--color-sagegreen);
+  background-color: var(--color-white);
+}
+
 .posts {
   margin-bottom: 5rem;
   padding: 1rem;
@@ -313,6 +318,21 @@ h1, h2, h3, h4, h5, h6 {
   display: inline-flex;
   align-items: center;
   margin-right: 1rem;
+}
+
+.post-author {
+  display: flex;
+  align-items: center;
+}
+
+.post-author p:last-child {
+  margin-left: auto;
+}
+
+.points-icon {
+  margin-left: 2rem;
+  margin-right: 0;
+  color: var(--color-deeppurple);
 }
 
 .favorite-bar {
