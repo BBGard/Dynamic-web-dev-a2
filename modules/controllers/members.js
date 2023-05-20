@@ -134,8 +134,6 @@ export async function getVotedPosts(context) {
   WHERE votes.member_id = ${memberId}
 `;
 
-console.log("got em boys");
-console.log(results);
   // Map voted posts to an array
   context.response.body = results.rows.map((r) => ({
     ...r,

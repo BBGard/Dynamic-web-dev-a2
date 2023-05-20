@@ -3,10 +3,23 @@ import { createVote, getVoteID } from "./votes.js";
 
 // Get posts from the db
 export async function getPosts(context) {
-  // TODO update this to only fetch NOT hidden posts
-  const results =
-    await client.queryObject`SELECT posts.post_id, posts.post_title, posts.post_description, posts.post_url, posts.post_created_at, posts.post_hidden, posts.post_rating, posts.member_id, posts.post_author
+  // Check if logged in
+  const loggedIn = await context.state.session.get("user");
+
+  let results;
+
+  // Logged in, return ALL posts
+  if (loggedIn) {
+    results = await client.queryObject`
+    SELECT posts.post_id, posts.post_title, posts.post_description, posts.post_url, posts.post_created_at, posts.post_hidden, posts.post_rating, posts.member_id, posts.post_author
         FROM posts`;
+  } else {
+    // Not logged in, return only visible (not hidden) posts
+    results = await client.queryObject`
+    SELECT posts.post_id, posts.post_title, posts.post_description, posts.post_url, posts.post_created_at, posts.post_hidden, posts.post_rating, posts.member_id, posts.post_author
+      FROM posts
+      WHERE posts.post_hidden = false`;
+  }
 
   // Map posts to an array
   context.response.body = results.rows.map((r) => ({
@@ -57,7 +70,8 @@ export async function createPost(context) {
 // Upvote or downvote a post
 export async function votePost(context) {
   // const postId = context.params.id;
-  const { postId, vote, postMemberId, votingMemberId } = await context.request.body().value;
+  const { postId, vote, postMemberId, votingMemberId } =
+    await context.request.body().value;
 
   // If no memberId or valid vote
   if (!postMemberId || (vote !== "up" && vote !== "down")) {
@@ -74,7 +88,7 @@ export async function votePost(context) {
 
   // console.log("The exisiting vote id");
   // console.log(existingVote.voteId);
-  if(existingVote.voteId != null) {
+  if (existingVote.voteId != null) {
     console.log("returning");
     // context.response.status = 409; // Conflict
     context.response.body = {
@@ -83,9 +97,6 @@ export async function votePost(context) {
     };
     return;
   }
-  console.log("made it here");
-
-
 
   // Set numeric value for the vote
   const voteValue = vote === "up" ? 1 : vote === "down" ? -1 : 0;
@@ -122,7 +133,7 @@ export async function votePost(context) {
 
   // Create a new Vote
   const newVoteResult = await createVote(context);
-  if(!newVoteResult.ok) {
+  if (!newVoteResult.ok) {
     console.log("Errors mcgee");
     context.response.status = 400;
     context.response.body = { error: "Couldn't create vote??" };
@@ -134,14 +145,15 @@ export async function votePost(context) {
   //   const result2 = client.queryObject`SELECT incense_points FROM members WHERE member_id = ${memberId}`;
   const [ratingResult, pointsResult] = await Promise.all([
     client.queryObject`SELECT post_rating FROM posts WHERE post_id = ${postId}`,
-    client.queryObject`SELECT incense_points FROM members WHERE member_id = ${postMemberId}`
+    client.queryObject`SELECT incense_points FROM members WHERE member_id = ${postMemberId}`,
   ]);
 
   if (ratingResult.rowCount === 0 || pointsResult.rowCount === 0) {
     context.response.status = 404;
-    context.response.body = { error: "Something went wrong fetching the updated results" };
+    context.response.body = {
+      error: "Something went wrong fetching the updated results",
+    };
   } else {
-
     //Return the updated data for rating and incense points
     const postRating = ratingResult.rows[0].post_rating;
     const memberPoints = pointsResult.rows[0].incense_points;
@@ -149,7 +161,32 @@ export async function votePost(context) {
     context.response.body = {
       message: "Vote counted successfully",
       post_rating: postRating,
-      incense_points: memberPoints
+      incense_points: memberPoints,
     };
   }
+}
+
+// Toggles the post_hidden status for a post
+export async function toggleHidePost(context) {
+  if (!context.request.hasBody) {
+    context.response.status = 400;
+    context.response.body = { error: "Expected a JSON object body" };
+    return;
+  }
+
+  const data = await context.request.body("json").value;
+
+  if (!data.postId || !data.memberId) {
+    context.response.status = 400;
+    context.response.body = { error: "Requires a postId and memberId" };
+    return;
+  }
+
+  const updateResult = await client.queryObject`UPDATE posts
+    SET post_hidden = NOT post_hidden
+    WHERE post_id = ${data.postId} AND member_id = ${data.memberId}`;
+
+  console.log(data);
+  console.log("toggled a post");
+  context.response.status = 201;
 }

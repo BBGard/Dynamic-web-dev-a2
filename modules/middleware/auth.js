@@ -61,7 +61,7 @@ export async function loginUser( username, password) {
 
 }
 
-export const requireAuthentication = async (context, next) => {
+export async function requireAuthentication(context, next) {
   // Retrieve the user session
   const loggedIn = await context.state.session.get("user");
 

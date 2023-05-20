@@ -1,8 +1,10 @@
-import { buildPosts, buildPostForm } from "./posts.js";
+import { buildPostList, buildPostForm } from "/post-builder.js";
+// import { buildPosts, buildPostForm } from "./posts.js";
 
 // Global state to track logged in user, local posts, members, etc
 let state = {
   currentUsername: null,
+  currentMemberId: null,
   posts: {},
   members: {}
 };
@@ -13,11 +15,15 @@ window.addEventListener("DOMContentLoaded", setupForum);
 
 
 function setupForum() {
+  const postListElement = document.querySelector(".post-list");
+
+
   // Setup posts, state, etc
   fetchMembers()
   .then(() => fetchPosts())
   .then(() => updateLoginElements())
-  .then(() => buildPosts(state))
+  // .then(() => buildPosts(state))
+  .then(() => buildPostList(postListElement, state.posts))
   .then(() => saveState());
 }
 
@@ -38,9 +44,11 @@ async function updateLoginElements() {
   if (data.username) {
     // Show username and add profile page redirect
     state.currentUsername = data.username;
+    state.currentMemberId = data.id; // Member ID of logged in user
+
     loginBtn.childNodes[1].textContent = "Logout";
     profileBtn.childNodes[1].textContent = `${data.username}`;
-    profileBtn.classList.remove('hidden');
+    profileBtn.classList.remove("hidden");
     loginBtn.addEventListener("click", (event) => {
       console.log("click");
       event.preventDefault();
@@ -49,11 +57,13 @@ async function updateLoginElements() {
 
     // Grab the favorites
     // console.log("grab the faves!");
-    const memberId = state.members.find((member) => member.username === state.currentUsername)?.member_id;
+    const memberId = state.members.find(
+      (member) => member.username === state.currentUsername
+    )?.member_id;
     const favRespons = await fetch(`/members/${memberId}/favorites`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ memberId }),
     });
@@ -64,10 +74,10 @@ async function updateLoginElements() {
     favButton.classList.remove("hidden");
 
     // Add new post form to the DOM
-    buildPostForm()
-    .then(() => {
+    buildPostForm().then(() => {
       // Add listener to create post input box
-      document.querySelector(".new-post-input")
+      document
+        .querySelector(".new-post-input")
         .addEventListener("click", (event) => {
           event.preventDefault();
           window.location.href = "/create-new-post";

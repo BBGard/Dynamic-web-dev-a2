@@ -61,6 +61,12 @@ export async function profileScript(context) {
     root: `${Deno.cwd()}/modules/views`,
   });
 };
+export async function postBuilder(context) {
+
+  await send(context, "/post-builder.js", {
+    root: `${Deno.cwd()}/modules/views`,
+  });
+};
 
 // Create new post form
 // router.get("/create-new-post", requireAuthentication, async (context) => {

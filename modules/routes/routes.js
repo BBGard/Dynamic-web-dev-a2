@@ -2,10 +2,11 @@ import { Router, Status } from "https://deno.land/x/oak@v12.3.0/mod.ts";
 import sodium from "https://deno.land/x/sodium@0.2.0/basic.ts";
 await sodium.ready;
 import { loginUser, requireAuthentication } from "../middleware/auth.js";
-import { getPosts, createPost, votePost, getPostsForMember } from "../controllers/posts.js";
+import { getPosts, createPost, votePost, getPostsForMember, toggleHidePost } from "../controllers/posts.js";
 import { getMembers, createMember, updateFavoritePosts, getFavoritePosts, getVotedPosts } from "../controllers/members.js";
 import { client } from "../database/database.js";
 import { createNewPostPage, createNewPostScript, loginPage, loginScript,
+  postBuilder,
   profilePage, profileScript, signUpPage, signUpScript } from "../middleware/staticServe.js";
 
 import {send} from "https://deno.land/x/oak@v7.4.1/mod.ts";
@@ -73,6 +74,7 @@ router.get("/sign-up", signUpPage);
 router.get("/sign-up.js", signUpScript);
 router.get("/profile", requireAuthentication, profilePage);
 router.get("/profile.js", requireAuthentication, profileScript);
+router.get("/post-builder.js", postBuilder);
 router.get("/create-new-post", requireAuthentication, createNewPostPage);
 router.get("/create-new-post.js", requireAuthentication, createNewPostScript);
 router.get("/posts", getPosts); // Get posts route
@@ -82,6 +84,7 @@ router.get("/members", getMembers); // Member route
 router.post("/new-member", createMember); // Create new member route
 router.post("/posts", requireAuthentication, createPost); // Create new post route
 router.post("/posts/:id/vote", requireAuthentication, votePost); // voteRoute
+router.post("/posts/:id/hide", requireAuthentication, toggleHidePost); // hide post route
 router.post("/members/:id/favorite", requireAuthentication, updateFavoritePosts); // update favorite
 router.post("/members/:id/favorites", requireAuthentication, getFavoritePosts); // get favorites
 
