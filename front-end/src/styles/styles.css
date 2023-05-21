@@ -111,6 +111,13 @@ h1, h2, h3, h4, h5, h6 {
   background-size: cover;
 }
 
+#profile-header-image {
+  background-image: url('../assets/profile_bg.webp');
+  background-position: center center;
+
+
+}
+
 .header-block {
   display: flex;
   flex-direction: row;

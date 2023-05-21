@@ -1,8 +1,7 @@
 let state;  // We'll get state in a min
 
 // Function to build all DOM elements for a given post list
-export async function buildPostList( postListElement, postList, currentState, sortMethod = "date-sort") {
-  state = currentState;
+export async function buildPostList( postListElement, postList, sortMethod = "date-sort") {
 
   postListElement.innerHTML = "";
 
@@ -14,7 +13,18 @@ export async function buildPostList( postListElement, postList, currentState, so
       break;
     case "rating-sort":
       // Sort highest rated to lowest rated
-      postList.sort((a, b) => b.post_rating - a.post_rating);
+      // postList.sort((a, b) => b.post_rating - a.post_rating);
+      postList.sort((a, b) => {
+        // If rating is not equal, sort by highest rated
+        if (b.post_rating !== a.post_rating) {
+          return b.post_rating - a.post_rating;
+        } else {
+          // If ratings are the same, sort by authors incense points
+          const authorA = state.members.find((member) => member.username === a.post_author);
+          const authorB = state.members.find((member) => member.username === b.post_author);
+          return authorB.incense_points - authorA.incense_points;
+        }
+      });
       break;
     case "author-sort":
       // Sort by author incense points
@@ -73,6 +83,124 @@ export async function buildPostList( postListElement, postList, currentState, so
     postListElement.appendChild(li);
   }
 }
+
+// Refresh some state variables
+export async function refreshState(currentState) {
+  state = currentState;
+  await fetchPosts();
+  await fetchMembers();
+  await fetchVotes();
+  await fetchMyPosts();
+  await fetchFavorites();
+  saveState();
+}
+
+// Rebuilds the DOM elements
+export async function rebuildDOM(currentState) {
+  state = currentState;
+  const postList = state.posts;
+  const postListElement = document.querySelector("#home-post-list");
+  const myPostsListElement = document.querySelector("#my-post-list");
+  const myFavoritesListElement = document.querySelector("#favorite-post-list");
+  const myVotesListElement = document.querySelector("#rated-post-list")
+
+  if (postListElement) {
+    await buildPostList(postListElement, state.posts, state.currentSort);
+  }
+  if (myPostsListElement) {
+
+    await buildPostList(myPostsListElement, state.myPosts, state.currentSort);
+  }
+  if (myFavoritesListElement) {
+
+    await buildPostList(myFavoritesListElement, state.favorites, state.currentSort);
+  }
+  if (myVotesListElement) {
+
+    await buildPostList(myVotesListElement, state.myVotes, state.currentSort);
+  }
+
+}
+
+// Fetch all rated posts belonging to current user
+async function fetchVotes() {
+  const memberId = state.currentMemberId;
+
+  if(memberId) {
+    const response = await fetch(`/myvotes`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ memberId }),
+    });
+    state.myVotes = await response.json();
+  }
+}
+
+// Grab the favorites
+async function fetchFavorites() {
+  const memberId = state.currentMemberId;
+
+  if (memberId) {
+    const favRespons = await fetch(`/members/${memberId}/favorites`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ memberId }),
+    });
+
+    state.favorites = await favRespons.json();
+  }
+}
+
+// Fetch members
+async function fetchMembers() {
+  const response = await fetch("/members");
+  state.members = await response.json();
+
+
+}
+
+// Fetch posts from server
+async function fetchPosts() {
+
+  const memberId = state.currentMemberId;
+  const response = await fetch("/posts", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ memberId }),
+  });
+
+
+  state.posts = await response.json();
+}
+
+// Fetch all posts belonging to current user
+async function fetchMyPosts() {
+  const memberId = state.currentMemberId;
+
+  if(memberId) {
+  const response = await fetch(`/myposts`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ memberId }),
+  });
+
+  state.myPosts = await response.json();
+}
+}
+
+// Save the state to local storage, to retrieve from profile pages
+function saveState() {
+  localStorage.setItem("state", JSON.stringify(state));
+}
+
 
 // Create a vote link
 function createVoteLink(href, className, arrowText) {
@@ -182,6 +310,7 @@ function createFavoriteLink(post) {
     state.favorites &&
     state.favorites.find((favorite) => favorite.post_id === post.post_id)
   ) {
+
     favIcon.classList.add("filled");
   }
 
@@ -329,23 +458,11 @@ async function postVote(postId, vote, postMemberId, votingMemberId) {
       if (updatedData.hasOwnProperty("error")) {
         console.log("You've already voted on this post!");
       } else {
-        // Update the DOM data for votes and incense points
-        const voteCount = document.querySelector(`#post-${postId} .vote-count`);
-        voteCount.textContent = updatedData.post_rating;
+        // Refresh state
+        await refreshState(state);
+        // Rebuild DOM elements if required
+        await rebuildDOM(state);
 
-        const thisPostAuthor = state.members.find(
-          (member) => member.member_id === postMemberId
-        ).username;
-
-        const memberPointsElements = document.querySelectorAll(`a.post-author`);
-
-        // Loop over all memberPoints elements and update any with matching authors
-        memberPointsElements.forEach((element) => {
-          if (element.textContent.includes(thisPostAuthor)) {
-            const memberPoints = element.querySelector(".author-points");
-            memberPoints.textContent = updatedData.incense_points;
-          }
-        });
       }
     } else {
       // Redirect if needed
@@ -378,47 +495,12 @@ async function postFavorite(postId, memberId) {
       if (updatedData.hasOwnProperty("error")) {
         console.log("Error: Unable to add favorite.");
       } else {
+        // Refresh state
+        await refreshState(state);
+        // Rebuild DOM elements if required
+        await rebuildDOM(state);
 
 
-
-        // Update the icon
-        const favIcon = document.querySelectorAll(
-          `#post-${postId} .favorite-icon`
-        );
-
-        const favPostList = document.querySelector("#favorite-post-list");
-
-        if (favIcon[0].classList.contains("filled")) {
-          // Remove fill
-          favIcon.forEach((icon) => {
-            icon.classList.remove("filled");
-          });
-
-          // Remove from fav list
-          if (favPostList) {
-            const postToRemove = favPostList.querySelector(`#post-${postId}`);
-            postToRemove.remove();
-            console.log("removed");
-          }
-
-        } else {
-          favIcon.forEach((icon) => {
-            icon.classList.add("filled");
-          });
-          // TODO copy post add to favorite list
-        }
-        // TODO updateState?
-
-        // // Update the icon
-        // const favIcon = document.querySelector(
-        //   `#post-${postId} .favorite-icon`
-        // );
-        // if (favIcon.classList.contains("filled")) {
-        //   // Remove fill
-        //   favIcon.classList.remove("filled");
-        // } else {
-        //   favIcon.classList.add("filled");
-        // }
       }
     } else {
       // Redirect if needed

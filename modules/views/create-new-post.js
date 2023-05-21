@@ -41,8 +41,10 @@ document.querySelector(".submit-button").addEventListener("click", async(event) 
     id
   };
 
+  console.log("trying");
   try {
-    const response = await fetch("/posts", {
+
+    const response = await fetch("/newpost", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

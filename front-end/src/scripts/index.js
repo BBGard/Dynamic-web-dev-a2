@@ -1,4 +1,4 @@
-import { buildPostList, buildPostForm } from "/post-builder.js";
+import { buildPostList, buildPostForm, refreshState, rebuildDOM } from "/post-builder.js";
 
 // Global state to track logged in user, local posts, members, etc
 let state = {
@@ -18,16 +18,12 @@ const profileBtn = document.querySelector("#profile-btn");
 const sortBtns = document.querySelectorAll(".sort-btn");
 
 // Setup the homepage posts, buttons, etc
-function setupForum() {
+async function setupForum() {
   // Setup posts, state, etc
-  getSession()
-    .then(() => fetchMembers())
-    .then(() => fetchPosts())
-    .then(() => updateLoginElements())
-    .then(() =>
-      buildPostList(postListElement, state.posts, state, state.currentSort)
-    )
-    .then(() => saveState());
+  await getSession();
+  await refreshState(state);
+  await updateLoginElements();
+  await rebuildDOM(state);
 }
 
 // Get the current session if any (check if user is logged in)
@@ -54,6 +50,10 @@ async function getSession() {
     favButton.classList.remove("hidden");
   }
 
+}
+
+// Check if logged in and update login elements
+async function updateLoginElements() {
   // Add new post form to the DOM
   buildPostForm().then(() => {
     // Add listener to create post input box
@@ -64,10 +64,7 @@ async function getSession() {
         window.location.href = "/create-new-post";
       });
   });
-}
 
-// Check if logged in and update login elements
-async function updateLoginElements() {
   // If already logged in
   if (state.currentUsername) {
 
@@ -81,11 +78,8 @@ async function updateLoginElements() {
       body: JSON.stringify({ memberId }),
     });
 
-    state.favorites = await favRespons.json();
-
-    // Update posts - why did I put this here...
-    // TODO investigate this
-    await buildPostList(postListElement, state.posts, state, state.sortMethod);
+    // state.favorites = await favRespons.json();
+    // await buildPostList(postListElement, state.posts, state.sortMethod);
   } else {
     // Show login button and add login listener
     loginBtn.childNodes[1].textContent = "Login";
@@ -112,33 +106,33 @@ async function updateLoginElements() {
 
       // Sort and rebuild posts
       state.currentSort = sortMethod;
-      await buildPostList(postListElement, state.posts, state, sortMethod);
+      await buildPostList(postListElement, state.posts, sortMethod);
     });
   });
 }
 
-// Fetch members from server
-async function fetchMembers() {
-  const response = await fetch("/members");
-  state.members = await response.json();
-}
+// // Fetch members from server
+// async function fetchMembers() {
+//   const response = await fetch("/members");
+//   state.members = await response.json();
+// }
 
-// Fetch posts from server
-async function fetchPosts() {
-  const memberId = state.currentMemberId;
-  const response = await fetch("/posts", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ memberId }),
-  });
-  state.posts = await response.json();
-}
+// // Fetch posts from server
+// async function fetchPosts() {
+//   const memberId = state.currentMemberId;
+//   const response = await fetch("/posts", {
+//     method: "POST",
+//     headers: {
+//       "Content-Type": "application/json",
+//     },
+//     body: JSON.stringify({ memberId }),
+//   });
+//   state.posts = await response.json();
+// }
 
-// Save the state to local storage, to retrieve from profile pages
-function saveState() {
-  localStorage.setItem("state", JSON.stringify(state));
-}
+// // Save the state to local storage, to retrieve from profile pages
+// function saveState() {
+//   localStorage.setItem("state", JSON.stringify(state));
+// }
 
-setupForum();
+await setupForum();

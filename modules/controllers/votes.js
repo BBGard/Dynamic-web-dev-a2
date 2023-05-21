@@ -1,7 +1,7 @@
 import { client } from "../database/database.js";
 
 // Create a vote linking a member_id to a post_id
-export async function createVote(context) {
+export async function createVote(context, voteValue) {
   const { postId, votingMemberId } = await context.request.body().value;
 
   // If no memberId or valid vote
@@ -16,8 +16,8 @@ export async function createVote(context) {
 
   // Create a new vote
   const result = await client.queryObject`
-  INSERT INTO votes (post_id, member_id)
-  VALUES (${postId}, ${votingMemberId})`;
+  INSERT INTO votes (post_id, member_id, vote_value)
+  VALUES (${postId}, ${votingMemberId}, ${voteValue})`;
 
   if (result.rowCount != 0) {
     context.response.status = 201;

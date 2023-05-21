@@ -36,7 +36,6 @@ export async function getPostsForMember(context) {
 
 // Create a new post, add to db
 export async function createPost(context) {
-
   // Check for json
   if (!context.request.hasBody) {
     context.response.status = 400;
@@ -119,7 +118,7 @@ export async function votePost(context) {
   }
 
   // Create a new Vote
-  const newVoteResult = await createVote(context);
+  const newVoteResult = await createVote(context, voteValue);
   if (!newVoteResult.ok) {
     context.response.status = 400;
     context.response.body = { error: "Couldn't create vote??" };

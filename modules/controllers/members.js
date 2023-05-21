@@ -91,12 +91,12 @@ WHERE member_id = ${memberId} AND post_id = ${postId};`;
 export async function getFavoritePosts(context) {
   const { memberId } = await context.request.body().value;
 
-  // Get all favorites, excluding hidden, unless they belong to the member
+  // Get all favorites for this member
   const results = await client.queryObject`
   SELECT DISTINCT posts.*
   FROM favorites
   JOIN posts ON favorites.post_id = posts.post_id
-  WHERE favorites.member_id = ${memberId} AND posts.post_hidden = false OR posts.member_id = ${memberId}`;
+  WHERE favorites.member_id = ${memberId}`;
 
   // Map results to an array
   context.response.body = results.rows.map((r) => ({
@@ -104,7 +104,7 @@ export async function getFavoritePosts(context) {
   }));
 }
 
-// Get all voted posts for a member
+// Get all positively voted posts for a member
 export async function getVotedPosts(context) {
   const { memberId } = await context.request.body().value;
 
@@ -113,7 +113,7 @@ export async function getVotedPosts(context) {
   SELECT DISTINCT posts.*
   FROM votes
   JOIN posts ON votes.post_id = posts.post_id
-  WHERE votes.member_id = ${memberId}  AND posts.post_hidden = false OR posts.member_id = ${memberId}`;
+  WHERE votes.member_id = ${memberId} AND votes.vote_value > 0 AND posts.post_hidden = false OR posts.member_id = ${memberId}`;
 
   // Map voted posts to an array
   context.response.body = results.rows.map((r) => ({
