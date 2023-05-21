@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="manifest" href="./public/webmanifest.json" />
+  <link rel="icon" href="./public/favicon.ico" type="image/x-icon">
+  <!-- Google Material Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Merriweather:400,700&display=swap"
+    rel="stylesheet">
+  <title>Sign up</title>
+  <script defer src="./sign-up.js" type="module"></script>
+  <link rel="stylesheet" href="./src/styles/styles.css">
+</head>
+
+<body>
+  <div class="container">
+    <!-- login Block -->
+    <div id="login-block" class="">
+      <div id="title-block">
+        <h1 id="title">Sign up to Incense Voice</h1>
+        <p>By continuing, you are setting up an Incense Voice account and agree to our
+          <a href="#">User Agreement</a> and
+          <a href="#">Privacy Policy</a>.
+        </p>
+
+      </div>
+      <!-- login Form -->
+      <div id="login-box">
+        <form id="login-form" autocomplete="off">
+          <h2>Create new account</h2>
+          <div class="form-group">
+            <!-- Input field only allows letters and numbers -->
+            <input autocomplete="off" type="text" name="username-field" id="username-field" required placeholder="Enter a username"
+              class="form-control" pattern="[A-Za-z0-9]+" title="Username should only contain letters and/or numbers.">
+            <input autocomplete="off" type="password" id="password-field" placeholder="Enter a password" class="form-control">
+              <div id="error-message" class="hidden"></div>
+          </div>
+          <div class="form-group">
+            <input type="submit" id="login-btn" class="submit-button" value="Create account" />
+          </div>
+          <div id="signup-block">
+            <p id="signup-link">Already have an account? <a href="login-page" >Log in here</a></p>
+          </div>
+        </form>
+      </div>
+      <!-- END login Form -->
+</body>
+
+</html>

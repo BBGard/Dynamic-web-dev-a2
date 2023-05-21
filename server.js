@@ -1,39 +1,28 @@
-import { Application, Router, send } from "https://deno.land/x/oak/mod.ts";
+import { Application } from "https://deno.land/x/oak@v12.3.0/mod.ts";
+
+// Import middleware and routes
+import { sessionMiddleware } from "./modules/middleware/session.js";
+import router from "./modules/routes/routes.js";
+import { staticFiles } from "./modules/middleware/staticServe.js";
 
 const app = new Application();
-const router = new Router();
+
+// Setup session middleware
+app.use(sessionMiddleware);
 
 // Setup routes
-// Homepage
-// router.get("/", (context) => {
-//    context.request.url.pathname;
-// });
-
-// router.get("/login", (context) => {
-//   context.response.body = "Login";
-// });
-// router.get("/signup", (context) => {
-//   context.response.body = "Signup";
-// });
-
-// Oak router middleware
 app.use(router.routes());
 app.use(router.allowedMethods());
 
-// Oak's built-in static serving
-// This serves up our home page
-app.use(async (context, next) => {
-  try {
-    await context.send({
-      root: `${Deno.cwd()}/front-end`,
-      index: "index.html",
-    });
-  } catch {
-    next();
-  }
-});
+// Setup static files middleware
+app.use(staticFiles);
 
-// deno run --allow-net --allow-env --allow-read server.js
-console.log("Server running on http://localhost:3000/");
+
+// Show connection in terminal
+app.addEventListener('listen', async () => {
+  console.log("Server running on http://localhost:3000/");
+
+})
 
 await app.listen({ port: 3000 });
+// deno run --allow-net --allow-env --allow-read server.js

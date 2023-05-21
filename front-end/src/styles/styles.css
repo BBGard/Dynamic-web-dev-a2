@@ -8,13 +8,18 @@
   --color-white: #ffffff;
   --color-offwhite: #f3f3f3;
   --color-lightgrey: #acacac;
+  --color-superlightgrey: #e8e8e8;
   --color-black: #141414;
   --color-deeppurple: #6A0DAD;
+  --color-iceblue: #dae0e6;
   --color-sagegreen: #9DC183;
   --color-warmbrown: #8B5A2B;
   --color-softblue: #B2D8D8;
   --color-blue: #0088ff;
+  --color-blue-hover: #3aa3ff;
   --color-red: #ff0048;
+  --color-yellow: #fff200;
+  --color-red-hover: #ff5082;
   --color-cream: #F5F5DC;
   --font-body: 'Merriweather', serif;
   --font-heading: 'Montserrat', sans-serif;
@@ -24,7 +29,7 @@
 
 body {
   margin: 0 auto;
-  background-color: var(--color-offwhite);
+  background-color: var(--color-iceblue);
   color: var(--color-black);
   font-family: var(--font-body);
 }
@@ -33,10 +38,6 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
 }
 
-/* Special classes to hide elements */
-.hidden {
-  display: none;
-}
 
 /* ------------------------------ Navbar Styling-------------------------------- */
 .top-nav {
@@ -110,6 +111,13 @@ h1, h2, h3, h4, h5, h6 {
   background-size: cover;
 }
 
+#profile-header-image {
+  background-image: url('../assets/profile_bg.webp');
+  background-position: center center;
+
+
+}
+
 .header-block {
   display: flex;
   flex-direction: row;
@@ -159,7 +167,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .join-button:hover {
-  background-color: #3aa3ff;
+  background-color: var(--color-blue-hover);
 }
 
 .forum-subtitle {
@@ -189,9 +197,45 @@ h1, h2, h3, h4, h5, h6 {
   max-width: 900px;
   margin: 1rem auto;
   padding: 0.75rem;
-  border: var(--border-standard);
-  border-radius: 6px;
+  border-radius: 10px;
+  /* border: var(--border-standard); */
   background-color: var(--color-white);
+}
+
+
+
+.sort-card {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  padding: 0.75rem 2rem;
+  border: var(--border-standard);
+  border-radius: 10.2px;
+}
+
+.sort-card a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 6px;
+}
+
+.sort-card a:hover {
+  color: var(--color-deeppurple);
+  background-color: var(--color-superlightgrey);
+}
+
+.sort-icon {
+  margin: 0.25rem;
+}
+
+.selected-icon {
+  color: var(--color-sagegreen);
+  background-color: var(--color-superlightgrey);
 }
 
 .new-post-card {
@@ -214,13 +258,26 @@ h1, h2, h3, h4, h5, h6 {
   font-size: 0.8rem;
 }
 
+.new-post-input:hover {
+  border-color: var(--color-sagegreen);
+  background-color: var(--color-white);
+}
+
+.posts {
+  margin-bottom: 5rem;
+  padding: 1rem;
+}
+
 .post {
   display: flex;
-  gap: 1rem;
+  /* gap: 1rem; */
 }
 
 .vote-bar {
   width: 2rem;
+  background-color: var(--color-offwhite);
+  padding-top: 1rem;
+  border-radius: 6px 6px 0 6px;
 }
 
 .vote-button {
@@ -246,33 +303,86 @@ h1, h2, h3, h4, h5, h6 {
   justify-content: space-between;
   text-align: left;
   width: 100%;
-  gap: 0.5rem;
+  /* gap: 0.5rem; */
+  padding-top: 1rem;
 }
 .post-bar {
+  /* padding-top: 1rem; */
+  padding-left: 0.5rem;
   width: 100%;
 }
 
-.author-bar {
+.author-bar, .favorite-bar {
   font-size: 0.8rem;
+  /* padding-top: 1rem; */
+}
+
+.italic {
+  font-style: italic;
+}
+
+.post-author, .favorite-link, .hide-link {
+  display: inline-flex;
+  align-items: center;
+  margin-right: 1rem;
 }
 
 .post-author {
-
-  display: inline-flex;
+  display: flex;
   align-items: center;
+}
+
+.post-author p:last-child {
+  margin-left: auto;
+}
+
+.points-icon {
+  margin-left: 2rem;
+  margin-right: 0;
+  color: var(--color-deeppurple);
+}
+
+.favorite-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
+  border-radius: 0 6px 6px 0;
+  background-color: var(--color-offwhite);
+
+}
+
+.favorite-link:hover, .hide-link:hover {
+  color: var(--color-deeppurple);
+}
+
+/* Fill the favorite icon */
+.filled {
+  color: var(--color-red);
+}
+
+
+.author-points {
+  margin-left: 1rem;
 }
 
 .title-bar {
   font-size: 1.2rem;
   font-weight: 700;
-}
-
-.post-title {
+  padding-top: 1rem;
 
 }
 
 .bottom-bar {
+  padding-top: 1rem;
+  padding-bottom: 0.5rem;
   font-size: 0.8rem;
+}
+
+.my-post {
+  background-color: var(--color-softblue);
 }
 
 @media only screen and (max-width: 830px) {
@@ -281,51 +391,60 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 /* --------------------------- Login Screen Styling -----------------------------*/
-/*
+
+#login-block {
+  background: var(--color-white);
+  border-radius: 0.25rem;
+  margin: 2.5rem auto;
+  text-align: center;
+  width: 75%;
+  max-width: 576px;
+  padding-bottom: 2rem;
+}
+
+#login-block a {
+  color: var(--color-blue);
+}
+
 #title-block {
+  margin: 0 auto;
   text-align: center;
   padding: 3rem 0;
-  width: 100%;
-}
-
-
-#title {
-  font-size: clamp(4rem, 10vw, 6rem);
-  font-family: var(--font-heading);
-  color: var(--color-darkblue);
-}
-
-#title span {
-  background: -webkit-linear-gradient(var(--color-green), var(--color-blue));
-  background-clip: text;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-#description {
-  font-style: italic;
-  font-weight: 400;
-  font-size: clamp(1.125rem, 5vw, 1.5rem);
-  color: var(--color-darkblue);
-}
-
-#login-box, #new-thread-block {
-  margin: 0 auto;
-  min-width: 320px;
   width: 75%;
   max-width: 576px;
 }
 
-#login-box h2, #new-thread-form h2 {
-  text-align: center;
-  margin-bottom: 1rem;
-  color: var(--color-white);
+
+#title {
+  font-size: 2rem;
+  font-family: var(--font-heading);
+  color: var(--color-black);
 }
 
+
+
+#login-box {
+  margin: 0 auto;
+  min-width: 320px;
+  width: 75%;
+  max-width: 576px;
+  border-top: solid 2px var(--color-lightgrey);
+  padding-top: 2rem;
+}
+
+#login-box h2 {
+  font-size: 1.6rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: var(--color-black);
+}
+
+
+
 form {
-  padding: 2.5rem;
-  background: var(--color-darkblue);
-  border-radius: 0.25rem;
+  /* padding: 2.5rem;
+  background: var(--color-white);
+  border-radius: 0.25rem; */
 }
 
 .form-group {
@@ -348,37 +467,39 @@ form {
 .form-control {
   display: block;
   width: 100%;
+  /* height: 3rem; */
+  margin-top: 1rem;
   padding: 0.375rem 0.75rem;
-  color: var(--color-darkblue);
+  color: var(--color-lightgrey);
   font-size: 1rem;
-  background-color: #fff;
+  background-color: var(--color-offwhite);
   background-clip: padding-box;
-  border: 2px solid var(--color-white);
+  border: var(--border-standard);
   border-radius: 5px;
-  box-shadow: 2px 2px 5px var(--color-black);
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  /* box-shadow: 2px 2px 5px var(--color-black); */
+  /* transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; */
 }
 
-input {
+form input {
   height: 3rem;
 }
 
 .form-control:hover {
   border: solid var(--color-white) 2px;
-  box-shadow: 0 0 5px var(--color-green);
+  box-shadow: 0 0 5px var(--color-sagegreen);
   font-weight: 100;
 }
 
 .form-control:focus {
   border: solid var(--color-green) 2px;
-  box-shadow: 0 0 5px var(--color-green);
+  box-shadow: 0 0 5px var(--color-deeppurple);
 }
 
-input, button, select, textarea {
+/* input, button, select, textarea {
   font-family: inherit;
   font-size: inherit;
   line-height: inherit;
-}
+} */
 
 .button-group {
   text-align: center;
@@ -392,303 +513,90 @@ input, button, select, textarea {
   font-weight: 600;
   text-align: center;
   padding: 0.75rem;
-  background: var(--color-green);
   color: var(--color-white);
-  border: solid var(--color-white) 2px;
-  border-radius: 5px;
+  border-radius: 25px;
   cursor: pointer;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
-#login-button {
-  width: 100%;
+.submit-button {
+  background: var(--color-blue);
+}
+
+.cancel-button {
+  background: var(--color-red);
 }
 
 .submit-button:hover {
-  background-color: var(--color-darkgreen);
-} */
+  background-color: var(--color-blue-hover);
+}
+
+.cancel-button:hover {
+  background: var(--color-red-hover);
+}
 
 /* ---------------------------  END Login Styling -----------------------------*/
 /* --------------------------------------------------------------------------- */
 
-
-/* --------------------------- Forum Styling -----------------------------*/
-
-/*
-#forum-block {
-  margin: 3% auto;
+/* ------------------------- New Post Form -----------------------------------*/
+#new-post-form {
+  margin: 5rem  auto;
   padding: 1rem;
-  min-width: 320px;
-  width: 75%;
-  max-width: 900px;
-  background-color: var(--color-offwhite);
-  border-radius: 22.4px;
-}
-
-#forum-title {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  align-items: center;
-  text-align: center;
-}
-
-
-#new-thread-butt {
-  display: block;
-  margin: 0 auto;
-  min-width: fit-content;
-  max-width: 250px;
-  font-size: 1rem;
-  font-weight: 500;
-  text-align: center;
-  padding: 0.75rem;
-  background-color: var(--color-green);
-  color: var(--color-white);
-  border: solid 2px var(--color-white);
-  border-radius: 10px;
-  cursor: pointer;
-  transition: background-color 0.15s ease-in-out;
-
-}
-
-#new-thread-butt:hover {
-  background-color: var(--color-darkgreen);
-}
-
-#latest-posts {
-  height: 75%;
-  margin: 5% auto;
-
-}
-
-.thread, .post {
-  padding: 0.75rem 2rem;
-  border: solid 1px var(--color-blue);
-  border-bottom: none;
-}
-
-.thread a {
-  font-size: 1.2rem;
-  font-weight: 500;
-}
-
-.author {
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--color-darkblue);
-  text-align: right;
-}
-
-#latest-posts ul> :last-child {
-  border-bottom: solid 1px var(--color-blue);
-  border-radius: 0 0 10px 10px;
-}
-
-#latest-posts ul> :first-child {
-  border-radius: 10px 10px 0 0;
-}
-
-.thread a:hover {
-  color: var(--color-darkgreen);
-}
-
-.post {
   background-color: var(--color-white);
-  border-color: var(--color-darkgreen);
+  max-width: 80%;
 }
 
-.post p {
-  text-align: left;
-  font-weight: 500;
+#new-post-form h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
 }
 
-.post-name {
-  font-size: 0.8rem;
-  color: var(--color-darkblue);
-}
-
-.reply-form {
-  padding: 0.75rem 2rem;
-  background: var(--color-blue);
-  border: solid 1px var(--color-darkgreen);
-  border-radius: 0 0 10px 10px;
-}
-
-.reply-form-group {
-  margin: 0 auto;
-  padding: 0.25rem;
-  text-align: center;
-}
-
-.reply-label {
-  font-weight: 500;
-  color: var(--color-white);
-}
-
-.reply-text-field {
-  margin: 0 1rem;
-  height: 2.5rem;
-  padding: 0.375rem 0.75rem;
-  color: var(--color-darkblue);
-  font-size: 1rem;
-  text-align: left;
-  background-color: var(--color-white);
-  border: 1px solid var(--color-blue);
-  border-radius: 5px;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-}
-
-.reply-text-field:hover {
-  border: solid var(--color-white) 1px;
-  box-shadow: 0 0 5px var(--color-green);
-}
-
-.reply-text-field:focus {
-  border: solid var(--color-green) 1px;
-  box-shadow: 0 0 5px var(--color-green);
-}
-
-.reply-button, .delete-button {
-  margin: 0 auto;
-  min-width: fit-content;
-  max-width: 250px;
-  font-size: 1rem;
-  font-weight: 500;
-  text-align: center;
-  padding: 0.75rem 2rem;
-  background: var(--color-green);
-  color: var(--color-white);
-  border-radius: 15px;
-  cursor: pointer;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-
-}
-
-.reply-button:hover {
-  box-shadow: 0 0 5px var(--color-green);
-  background-color: var(--color-darkgreen);
-}
-
-.delete-button {
-  display: block;
-  background: var(--color-red);
-  margin-top: 0.25rem;
-}
-
-.delete-button:hover {
-  box-shadow: 0 0 5px var(--color-red);
-  background-color: var(--color-darkred);
+/* #new-post-form label {
+  margin-left: 0.5rem;
+  display: none;
 } */
 
-
-/* ------------ END Post Reply Form -------------- */
-/*
-#new-thread-form {
-  background-color: var(--color-blue);
-}
-
-label {
-  color: var(--color-white);
-}
-
-#new-thread-form input, #new-thread-form textarea {
+#new-post-form input, #new-post-form textarea {
   margin-top: 0.4rem;
   box-shadow: none;
 }
 
 .cancel-button {
-  font-weight: 400;
-  background: var(--color-red);
   margin-right: 10%;
 }
 
-.cancel-button:hover {
-  box-shadow: 0 0 5px var(--color-red);
-  background-color: var(--color-darkred);
-}
- */
+#new-post-form .form-control {
+  border: solid var(--color-white) 2px;
 
-
-
-/* MEDIA QUERIES */
-
-/* Forum */
-/* @media only screen and (min-width: 768px) {
-  .burger {
-    display: none;
-  }
-
-  .menu {
-    display: flex;
-  }
-
-  .menu ul {
-    display: flex;
-  }
 }
 
+#new-post-form .form-control:hover {
+  box-shadow: 0 0 5px var(--color-sagegreen);
+  font-weight: 100;
+}
+
+#new-post-form .form-control:focus {
+  border: solid var(--color-green) 2px;
+  box-shadow: 0 0 5px var(--color-deeppurple);
+  color: var(--color-black);
+}
+
+
+/* Screens under 830px */
 @media only screen and (max-width: 830px) {
-  .menu {
-    display: none;
+  #new-post-form {
+    max-width: 100%;
   }
+}
 
-  menu ul {
-    display: block;
-    width: 100%;
+/* Screens over 1100px wide */
+@media only screen and (min-width: 1100px) {
+  #new-post-form {
+    max-width: 50%;
   }
-
-  .menu li {
-    margin: 1rem 0;
-    display: block;
-  }
-
-  .menu a {
-    font-size: 1.8rem;
-  }
-
-  .menu.responsive {
-    display: block;
-    position: absolute;
-    top: 5rem;
-    left: 0;
-    right: 0;
-    padding: 1rem;
-    background: var(--color-darkgreen);
-    float: none;
-    height: 100vh;
-    width: 100vw;
-    text-align: center;
-  }
-
-  .menu.responsive li {
-    min-width: 100%;
-    margin: 1rem 0;
-  }
-
-  .menu.responsive a {
-    font-size: 1.8rem;
-  }
-
-  .submit-button, .cancel-button {
-    display: block;
-    width: 100%;
-  }
-
-  #forum-block {
-    width: 90%;
-    max-width: 90%;
-  }
-
-  .reply-form {
-    padding: 0.5rem;
-  }
-
-  .reply-button, .reply-text-field {
-    display: block;
-    margin: 0.5rem auto;
-  }
-
-  .reply-text-field {
-    width: 90%;
-  }
-} */
+}
+/* -------------------- End New Post Form Styling ---------------------- */
+/* Special classes to hide elements */
+.hidden {
+  display: none;
+}
