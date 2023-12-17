@@ -1,4 +1,6 @@
 # Incense Voice
+## Dynamic Web Development Assignment 2
+Involved creating a website basd on a provided specification with a HTML front-end and a RESTful API back-end.
 
 ## Setup
 ### Database
@@ -30,4 +32,3 @@ To run the app, enter the following into the terminal
 ```
 deno run --allow-net --allow-env --allow-read server.js
 ```
-## Dev Notes
